@@ -100,14 +100,21 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .tile.wasbad{border-color:var(--bad);border-style:solid;color:var(--bad);text-decoration:line-through}
 .tile.wasbad::after,.tile.wasok::after{position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-radius:50%;font:700 12px/20px Inter,sans-serif;text-align:center}
 .tile.wasbad::after{content:attr(data-real);background:var(--good);color:#fff;text-decoration:none}
+.tile.empty[data-real]{color:var(--muted)}
 .tile.wasok::after{content:'✓';background:var(--good);color:#fff}
-.tiles.slots{margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed var(--line);flex-wrap:nowrap;max-width:none;gap:4px}
+.w12lab{font-size:12px;color:var(--muted);text-align:center;margin:4px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.tiles.inrow{flex-wrap:nowrap;max-width:none;gap:4px;margin-bottom:16px}
+.tiles.inrow .tile{width:min(44px,calc((100vw - 76px) / 12 - 4px));height:auto;aspect-ratio:44/52;font-size:min(24px,calc((100vw - 76px) / 22))}
+.tile.closed{background:var(--ink);border-color:var(--ink);opacity:.85}
+.tile.placed{border-color:var(--ink)}
+.tiles.slots{margin-bottom:6px;flex-wrap:nowrap;max-width:none;gap:4px}
 .tiles.slots .tile{width:min(44px,calc((100vw - 76px) / 12 - 4px));height:auto;aspect-ratio:44/52;font-size:min(24px,calc((100vw - 96px) / 22))}
 .tile.empty{background:transparent;border-style:dotted}
 .tile.qslot{background:var(--chip);color:var(--bad);border-color:var(--bad);border-style:dashed}
 .tile.bought,.tile.qdone{border-color:var(--good);color:var(--good)}
-.tile.used{opacity:.15}
-[data-tile],[data-slot]{cursor:pointer}
+.tile.used{opacity:.3}
+[data-q]{cursor:pointer}
+[data-q]:hover{border-color:var(--accent)}
 .legend{font-size:13px;color:var(--muted);text-align:center;max-width:480px}
 .gin{display:flex;gap:8px;width:100%;max-width:440px}
 .gin input{flex:1;font:600 20px Inter,sans-serif;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-transform:uppercase;min-width:0}
@@ -119,6 +126,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .pie path{fill:var(--bg);stroke:var(--line);stroke-width:2}
 .pie path.miss{fill:var(--chip)} .pie text.miss{fill:var(--bad)}
 .pie path.hl{stroke:var(--good);stroke-width:4}
+@media (max-width:560px){.tiles.inrow,.tiles.slots{flex-wrap:wrap;max-width:300px;gap:6px;margin-left:auto;margin-right:auto}.tiles.inrow .tile,.tiles.slots .tile{width:42px;font-size:22px}}
 @media (max-width:520px){.knight{grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,64px)}.tile{width:38px;height:46px;font-size:20px}.card{min-height:360px;padding:16px}.imgwrap img{max-height:220px}}
 </style>
 </head>
@@ -241,7 +249,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
       </div>
       <div class="gstat">
         <label><input type="checkbox" id="gShowOnly"> Alleen woorden uit de uitzendingen</label>
-        <label id="gMissWrap" class="hidden">Ontbrekende letters <select id="gMiss"><option value="r">willekeurig 0-3</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+        <label id="gMissWrap" class="hidden">Lege antwoorden <select id="gMiss"><option value="r">willekeurig 0-3</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
         <label id="gUnsWrap" class="hidden">Onzekere antwoorden <select id="gUns"><option value="0">geen</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="r">willekeurig 1-6</option></select></label>
         <span id="gScore"></span>
       </div>
@@ -598,7 +606,7 @@ let G = null; const gScore = store.get('gScore', {});
 const GAMES = {
   ps: {title: 'Paardensprong', intro: 'De 8 letters vormen één woord als je ze leest met de sprong van het paard uit het schaakspel (twee vakjes rechtdoor, één opzij). Begin en richting zijn onbekend. In de quiz telt de eerste letter.'},
   tp: {title: 'Taartpuzzel', intro: 'Lees de letters rond de taart, met of tegen de klok in, vanaf een onbekend stuk. Eén stuk ontbreekt. In de quiz telt de ONTBREKENDE letter. Typ die letter of het hele woord.'},
-  w12: {title: '12-letterwoord', intro: 'Maak van jullie letters één woord van 12 letters (IJ telt als één letter). Een fout beantwoorde vraag geeft een ? op de juiste plek in het woord; met Koop letter krijg je zo’n letter. Kies onderaan ook onzekere antwoorden (max. 6): die letters kunnen fout zijn.'}
+  w12: {title: '12-letterwoord', intro: 'Boven staan de antwoorden van het team per vraag: zeker, onzeker (oranje, 50% kans fout) of leeg. Tik een antwoord aan en de letter komt op de juiste plek in het woord; een fout of leeg antwoord wordt daar een ?. Raad het woord van 12 letters (IJ telt als één) en typ het in. Koop letter onthult een vakje.'}
 };
 function rnd(n){ return Math.floor(Math.random() * n); }
 function startGame(kind){
@@ -606,7 +614,7 @@ function startGame(kind){
   G = {kind};
   $('setupView').classList.add('hidden'); $('gameView').classList.remove('hidden');
   $('gTitle').textContent = GAMES[kind].title; $('gIntro').textContent = GAMES[kind].intro;
-  $('gBuy').classList.toggle('hidden', kind !== 'w12'); $('gShuffle').classList.toggle('hidden', kind !== 'w12');
+  $('gBuy').classList.toggle('hidden', kind !== 'w12'); $('gShuffle').classList.add('hidden');
   $('gMissWrap').classList.toggle('hidden', kind !== 'w12'); $('gUnsWrap').classList.toggle('hidden', kind !== 'w12');
   $('gUns').value = store.get('gUns', '0');
   $('gShowOnly').checked = store.get('gShowOnly', false);
@@ -620,20 +628,25 @@ function nextPuzzle(){
   if (G.kind === 'ps') { G.start = rnd(8); G.dir = Math.random() < .5 ? 1 : -1; }
   if (G.kind === 'tp') { G.start = rnd(9); G.dir = Math.random() < .5 ? 1 : -1; G.miss = rnd(9); }
   if (G.kind === 'w12') {
+    // Elke vraag hoort bij één (onbekende) positie in het woord.
+    G.pos = shuffle([...G.tiles.keys()]);                                        // vraag k -> positie G.pos[k]
     const sel = $('gMiss').value, m = sel === 'r' ? rnd(4) : Number(sel);
-    G.hidden = new Set(shuffle([...G.tiles.keys()]).slice(0, m));          // fout beantwoord -> ? op de juiste plek
     const us = $('gUns').value, u = us === 'r' ? 1 + rnd(6) : Number(us);
-    const cand = shuffle([...G.tiles.keys()].filter(i => !G.hidden.has(i))).slice(0, u);
+    const qs = shuffle([...G.tiles.keys()]);
+    const empty = new Set(qs.slice(0, m)), unsure = new Set(qs.slice(m, m + u));
     const COMMON = 'EANRTOISLDGKMUBVPHWCZF'.split('');
-    G.unsure = new Map(cand.map(i => {                                         // onzeker: 50% kans dat het antwoord fout was
-      const wrong = Math.random() < .5;
-      let shown = G.tiles[i];
-      if (wrong) { const opts = COMMON.filter(c => c !== G.tiles[i]); shown = opts[rnd(opts.length)]; }
-      return [i, {wrong, shown}];
-    }));
-    G.q = new Set([...G.hidden, ...[...G.unsure].filter(([, x]) => x.wrong).map(([i]) => i)]);  // posities met ?
-    G.order = shuffle([...G.tiles.keys()].filter(i => !G.hidden.has(i)));   // tegels die het team heeft
-    G.place = Array(G.tiles.length).fill(null);                              // slot -> tegel
+    G.ans = G.pos.map((p, k) => {
+      const real = G.tiles[p];
+      if (empty.has(k)) return {state: 'leeg', shown: '', ok: false};
+      if (unsure.has(k)) {
+        const ok = Math.random() >= .5;                                          // 50% kans dat het onzekere antwoord fout was
+        const opts = COMMON.filter(c => c !== real);
+        return {state: 'onzeker', shown: ok ? real : opts[rnd(opts.length)], ok};
+      }
+      return {state: 'zeker', shown: real, ok: true};
+    });
+    G.used = new Set();                                                          // aangetikte vragen
+    G.reveal = Array(G.tiles.length).fill(null);                                 // positie -> letter of '?'
     G.bought = new Set();
   }
   drawPuzzle(); $('gInput').focus(); updScore();
@@ -660,49 +673,41 @@ function drawPuzzle(){
     b.innerHTML = svg + '</svg>';
   }
   if (G.kind === 'w12') {
-    const letter = i => (G.unsure.get(i) || {}).shown || T[i];
-    const placed = new Set(G.place.filter(x => x !== null));
-    let row = '<div class="tiles slots">' + T.map((t, s) => {
+    const n = T.length;
+    const inp = '<div class="w12lab">Antwoorden van het team (vraag 1 t/m ' + n + ')</div><div class="tiles inrow">' + G.ans.map((a, k) => {
       if (G.done) {
-        return `<div class="tile ${G.q.has(s) ? 'qdone' : ''}">${t}</div>`;
+        if (a.state === 'onzeker') return a.ok ? `<div class="tile wasok" title="vraag ${k+1}">${a.shown}</div>` : `<div class="tile wasbad" data-real="${T[G.pos[k]]}" title="vraag ${k+1}">${a.shown}</div>`;
+        if (a.state === 'leeg') return `<div class="tile empty" data-real="${T[G.pos[k]]}">${T[G.pos[k]]}</div>`;
+        return `<div class="tile">${a.shown}</div>`;
       }
-      if ((G.hint && s === 0) || G.bought.has(s)) return `<div class="tile bought">${t}</div>`;
-      if (G.q.has(s)) return '<div class="tile qslot">?</div>';
-      const p = G.place[s];
-      if (p !== null) return `<div class="tile ${G.unsure.has(p) ? 'unsure' : ''}" data-slot="${s}">${letter(p)}</div>`;
-      return `<div class="tile empty" data-slot="${s}"></div>`;
+      const cls = a.state === 'leeg' ? 'empty' : a.state === 'onzeker' ? 'unsure' : '';
+      return `<div class="tile ${cls} ${G.used.has(k) ? 'used' : ''}" ${G.used.has(k) ? '' : `data-q="${k}"`} title="vraag ${k+1}">${a.shown}</div>`;
     }).join('') + '</div>';
-    let pool = '<div class="tiles pool">' + G.order.map(i => {
-      if (G.done) {
-        const un = G.unsure.get(i);
-        if (!un) return '';
-        return un.wrong ? `<div class="tile wasbad" data-real="${T[i]}">${un.shown}</div>` : `<div class="tile wasok">${T[i]}</div>`;
-      }
-      if (placed.has(i)) return `<div class="tile used"></div>`;
-      return `<div class="tile ${G.unsure.has(i) ? 'unsure' : ''}" data-tile="${i}">${letter(i)}</div>`;
+    const sol = '<div class="w12lab">Oplossingswoord</div><div class="tiles slots">' + T.map((t, s) => {
+      if (G.done) return `<div class="tile ${G.reveal[s] === null ? '' : G.reveal[s] === '?' ? 'qdone' : 'placed'}">${t}</div>`;
+      if (G.bought.has(s) || (G.hint && s === 0)) return `<div class="tile bought">${t}</div>`;
+      const r = G.reveal[s];
+      if (r === '?') return '<div class="tile qslot">?</div>';
+      if (r) return `<div class="tile placed">${r}</div>`;
+      return '<div class="tile closed"></div>';
     }).join('') + '</div>';
-    const nq = G.q.size, nu = G.unsure.size;
+    const nu = G.ans.filter(a => a.state === 'onzeker').length;
     const leg = G.done
-      ? (nu ? 'Onder: je onzekere antwoorden. Groen ✓ = klopte; rood doorgestreept = fout (de juiste letter staat in het groene rondje).' : '')
-      : `Boven het woord, onder jullie letters. Tik een letter om hem te plaatsen, tik in het woord om hem terug te halen. <b>?</b> = fout beantwoorde vraag (op de juiste plek).` +
-        (nu ? ` Oranje = onzeker antwoord: 50% kans dat het fout was. Zie je meer <b>?</b> dan je aan foute antwoorden verwacht, dan past een van de oranje letters niet.` : '');
-    b.innerHTML = row + pool + (leg ? `<p class="legend">${leg}</p>` : '');
-    b.querySelectorAll('[data-tile]').forEach(el => el.onclick = () => {
-      const s = G.place.findIndex((x, k) => x === null && !G.q.has(k) && !(G.hint && k === 0) && !G.bought.has(k));
-      if (s >= 0) { G.place[s] = Number(el.dataset.tile); drawPuzzle(); }
+      ? 'Boven: groen ✓ = onzeker antwoord klopte, rood doorgestreept = fout (juiste letter in het groene rondje); gestippeld = leeg antwoord.'
+      : 'Tik een antwoord aan: de letter komt op de juiste plek in het woord. Was het antwoord fout of leeg, dan verschijnt daar een <b>?</b>. Oranje = onzeker (50% kans fout), gestippeld = leeg.' + (nu ? '' : '');
+    b.innerHTML = inp + sol + `<p class="legend">${leg} Geplaatst: ${G.used.size} van ${n}.</p>`;
+    b.querySelectorAll('[data-q]').forEach(el => el.onclick = () => {
+      const k = Number(el.dataset.q), a = G.ans[k], p = G.pos[k];
+      G.used.add(k); G.reveal[p] = a.ok ? T[p] : '?';
+      drawPuzzle();
     });
-    b.querySelectorAll('[data-slot]').forEach(el => el.onclick = () => { G.place[Number(el.dataset.slot)] = null; drawPuzzle(); });
   }
 }
 function norm(x){ return tilesOf(x).join(''); }
 function check(){
   if (G.done) { nextPuzzle(); return; }
   let v = norm($('gInput').value); const word = G.tiles.join('');
-  if (!v && G.kind === 'w12') {
-    const L = G.tiles.map((t, k) => (G.hint && k === 0) || G.bought.has(k) ? t : G.place[k] !== null ? ((G.unsure.get(G.place[k]) || {}).shown || G.tiles[G.place[k]]) : null);
-    if (L.includes(null)) { $('gMsg').textContent = 'Typ het hele woord, of vul eerst alle vakjes (een ? moet je zelf raden of kopen).'; $('gMsg').className = 'gmsg no'; return; }
-    v = L.join('');
-  }
+  if (!v && G.kind === 'w12') { $('gMsg').textContent = 'Typ het hele woord in het invoerveld.'; $('gMsg').className = 'gmsg no'; return; }
   let ok = v === word;
   if (G.kind === 'tp' && v === G.tiles[G.miss]) ok = true;
   if (ok) { finishPuzzle(true); }
@@ -721,8 +726,8 @@ $('gCheck').onclick = check;
 $('gInput').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
 $('gNext').onclick = nextPuzzle;
 $('gSolve').onclick = () => { if (!G.done) finishPuzzle(false); };
-$('gHint').onclick = () => { G.hint = 1; if (G.kind === 'w12') G.place[0] = null; drawPuzzle(); $('gMsg').className = 'gmsg'; $('gMsg').textContent = G.kind === 'w12' ? 'De eerste letter staat nu groen in het woord.' : 'Het groen omrande vak is de eerste letter.'; };
-$('gBuy').onclick = () => { const h = [...G.q].filter(k => !G.bought.has(k)); if (!h.length || G.done) return; G.bought.add(h[rnd(h.length)]); drawPuzzle(); };
+$('gHint').onclick = () => { G.hint = 1; drawPuzzle(); $('gMsg').className = 'gmsg'; $('gMsg').textContent = G.kind === 'w12' ? 'De eerste letter staat nu groen in het woord.' : 'Het groen omrande vak is de eerste letter.'; };
+$('gBuy').onclick = () => { if (G.done) return; const h = G.tiles.map((_, s) => s).filter(s => !G.bought.has(s) && (G.reveal[s] === null || G.reveal[s] === '?')); if (!h.length) return; G.bought.add(h[rnd(h.length)]); drawPuzzle(); };
 $('gShuffle').onclick = () => { G.order = shuffle(G.order); drawPuzzle(); };
 $('gShowOnly').onchange = () => { store.set('gShowOnly', $('gShowOnly').checked); nextPuzzle(); };
 $('gMiss').onchange = nextPuzzle;
