@@ -44,6 +44,17 @@ Let op: met een gratis account is een Pages-site openbaar (de link is niet gehei
 
 Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de lijsten. Heb je de spreadsheet aangepast, kies hem dan op de pagina bij "Aangepaste spreadsheet?". Online (GitHub Pages) leest de pagina altijd zelf de nieuwste `stamlijsten.xlsx`.
 
+## Puzzels oefenen
+
+Op het beginscherm staan drie oefenspellen:
+
+- **Paardensprong** – 8 letters in een 3×3-raster; lees het woord met paardensprongen (begin en richting onbekend).
+- **Taartpuzzel** – 9 stukken, één ontbreekt; typ de ontbrekende letter of het hele woord.
+- **12-letterwoord** – losse letters (IJ telt als één), een aantal ontbreekt; met *Koop letter* krijg je er één, met *Husselen* een nieuwe volgorde.
+
+Met *Alleen woorden uit de uitzendingen* oefen je alleen met woorden die echt in 2 voor 12 voorkwamen
+(45 paardensprongen, 37 taartpuzzels, 86 twaalfletterwoorden); anders komen er extra woorden bij.
+
 ## Bediening
 
 - Kies bij *Vraag* tussen de voorgelezen (uitgebreide) of de korte vraag.
