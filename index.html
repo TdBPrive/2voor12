@@ -264,6 +264,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
       </div>
       <div class="gstat">
         <label><input type="checkbox" id="gShowOnly"> Alleen woorden uit de uitzendingen</label>
+        <label id="gRealWrap" class="hidden" title="Aantal fouten volgens 87 echte teamrondes: 0 fout 36%, 1 fout 30%, 2 fout 14%, 3 fout 11%, 4 fout 7%, 5 fout 2%"><input type="checkbox" id="gReal"> Zoals in de uitzendingen</label>
         <label id="gMissWrap" class="hidden rng">Lege antwoorden van <input type="number" id="gMissMin" min="0" max="6" value="0"> tot <input type="number" id="gMissMax" min="0" max="6" value="3"></label>
         <label id="gUnsWrap" class="hidden rng">Onzekere antwoorden van <input type="number" id="gUnsMin" min="0" max="6" value="0"> tot <input type="number" id="gUnsMax" min="0" max="6" value="0"></label>
         <span id="gScore"></span>
@@ -631,7 +632,8 @@ function startGame(kind){
   $('gTitle').textContent = GAMES[kind].title; $('gIntro').textContent = GAMES[kind].intro;
   $('gBuy').classList.toggle('hidden', kind !== 'w12'); $('gShuffle').classList.add('hidden');
   $('gCountWrap').classList.remove('hidden'); $('gTimer').classList.add('hidden');
-  $('gMissWrap').classList.toggle('hidden', kind !== 'w12'); $('gUnsWrap').classList.toggle('hidden', kind !== 'w12');
+  $('gMissWrap').classList.toggle('hidden', kind !== 'w12'); $('gUnsWrap').classList.toggle('hidden', kind !== 'w12'); $('gRealWrap').classList.toggle('hidden', kind !== 'w12');
+  $('gReal').checked = store.get('gReal', false); syncReal();
   const rs = store.get('w12range', {mi: 0, ma: 3, ui: 0, ua: 0}); $('gMissMin').value = rs.mi; $('gMissMax').value = rs.ma; $('gUnsMin').value = rs.ui; $('gUnsMax').value = rs.ua;
   $('gShowOnly').checked = store.get('gShowOnly', false);
   nextPuzzle();
@@ -648,16 +650,28 @@ function nextPuzzle(){
     // Elke vraag hoort bij één (onbekende) positie in het woord.
     G.pos = shuffle([...G.tiles.keys()]);                                        // vraag k -> positie G.pos[k]
     const rg = (a, b) => { let lo = clamp($(a).value), hi = clamp($(b).value); if (lo > hi) [lo, hi] = [hi, lo]; return lo + rnd(hi - lo + 1); };
-    const m = rg('gMissMin', 'gMissMax');
-    const u = Math.min(rg('gUnsMin', 'gUnsMax'), G.tiles.length - m);
     const qs = shuffle([...G.tiles.keys()]);
-    const empty = new Set(qs.slice(0, m)), unsure = new Set(qs.slice(m, m + u));
+    let empty, unsure, forced = null;
+    if ($('gReal').checked) {
+      // Echte verdeling van foute antwoorden per team (87 rondes, S25-S26)
+      const draw = () => { const w = [31, 26, 12, 10, 6, 2]; let r = Math.random() * 87; for (let i = 0; i < w.length; i++) { if ((r -= w[i]) < 0) return i; } return 0; };
+      const F = draw(), C = Math.min(draw(), G.tiles.length - F);       // F fout, C onzeker-maar-goed
+      const L = F > 0 && Math.random() < 1 / 87 * 87 / 114 ? 1 : 0;      // leeg komt vrijwel nooit voor (1 op 114 fouten)
+      empty = new Set(qs.slice(0, L));
+      const wrongU = qs.slice(L, F), rightU = qs.slice(F, F + C);
+      unsure = new Set([...wrongU, ...rightU]);
+      forced = new Map([...wrongU.map(k => [k, false]), ...rightU.map(k => [k, true])]);
+    } else {
+      const m = rg('gMissMin', 'gMissMax');
+      const u = Math.min(rg('gUnsMin', 'gUnsMax'), G.tiles.length - m);
+      empty = new Set(qs.slice(0, m)); unsure = new Set(qs.slice(m, m + u));
+    }
     const COMMON = 'EANRTOISLDGKMUBVPHWCZF'.split('');
     G.ans = G.pos.map((p, k) => {
       const real = G.tiles[p];
       if (empty.has(k)) return {state: 'leeg', shown: '', ok: false};
       if (unsure.has(k)) {
-        const ok = Math.random() >= .5;                                          // 50% kans dat het onzekere antwoord fout was
+        const ok = forced ? forced.get(k) : Math.random() >= .5;               // 50% kans dat het onzekere antwoord fout was
         const opts = COMMON.filter(c => c !== real);
         return {state: 'onzeker', shown: ok ? real : opts[rnd(opts.length)], ok};
       }
@@ -748,6 +762,8 @@ $('gHint').onclick = () => { G.hint = 1; drawPuzzle(); $('gMsg').className = 'gm
 $('gBuy').onclick = () => { if (G.done) return; const h = G.tiles.map((_, s) => s).filter(s => !G.bought.has(s) && (G.reveal[s] === null || G.reveal[s] === '?')); if (!h.length) return; G.bought.add(h[rnd(h.length)]); drawPuzzle(); };
 $('gShuffle').onclick = () => { G.order = shuffle(G.order); drawPuzzle(); };
 $('gShowOnly').onchange = () => { store.set('gShowOnly', $('gShowOnly').checked); nextPuzzle(); };
+function syncReal(){ const on = $('gReal').checked; ['gMissMin','gMissMax','gUnsMin','gUnsMax'].forEach(id => $(id).disabled = on); $('gMissWrap').style.opacity = $('gUnsWrap').style.opacity = on ? .45 : 1; }
+$('gReal').onchange = () => { store.set('gReal', $('gReal').checked); syncReal(); nextPuzzle(); };
 function clamp(v){ v = Math.round(Number(v)); return isNaN(v) ? 0 : Math.max(0, Math.min(6, v)); }
 ['gMissMin','gMissMax','gUnsMin','gUnsMax'].forEach(id => $(id).onchange = () => {
   $(id).value = clamp($(id).value);

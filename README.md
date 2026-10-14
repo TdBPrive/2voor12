@@ -53,7 +53,9 @@ Op het beginscherm staan drie oefenspellen:
 - **12-letterwoord** – je hebt 2 minuten (de klok bovenin klopt steeds harder naarmate de tijd opraakt). Boven staan de 12 antwoorden van het team, per vraag: zeker, onzeker (oranje, 50% kans fout) of leeg
   (donkergrijs met streepje). Tik een antwoord aan: de letter komt op de juiste plek in het oplossingswoord; een fout of leeg antwoord wordt
   daar een **?**. Typ het woord (IJ telt als één letter). *Koop letter* onthult een vakje. Kies onderaan van hoeveel tot hoeveel
-  lege en onzekere antwoorden (elk 0-6) er per ronde zijn; de pagina kiest daartussen een willekeurig aantal. Na afloop zie je welke onzekere antwoorden klopten.
+  lege en onzekere antwoorden (elk 0-6) er per ronde zijn; de pagina kiest daartussen een willekeurig aantal.
+  Met *Zoals in de uitzendingen* volgt het aantal foute antwoorden de echte verdeling uit 87 teamrondes
+  (0 fout 36%, 1: 30%, 2: 14%, 3: 11%, 4: 7%, 5: 2%); er komen evenveel onzekere-maar-goede antwoorden bij, leeg is zeldzaam. Na afloop zie je welke onzekere antwoorden klopten.
 
 Met *Alleen woorden uit de uitzendingen* oefen je alleen met woorden die echt in 2 voor 12 voorkwamen
 (45 paardensprongen, 37 taartpuzzels, 86 twaalfletterwoorden); anders komen er extra woorden bij.
