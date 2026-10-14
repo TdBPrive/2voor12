@@ -134,6 +134,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .gbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .gmsg{min-height:26px;font-weight:600;text-align:center}
 .gmsg.ok{color:var(--good)} .gmsg.no{color:var(--bad)}
+.rng input{width:52px;font:inherit;padding:6px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-align:center}
 .gstat{display:flex;gap:16px;color:var(--muted);font-size:14px;align-self:stretch;justify-content:space-between;flex-wrap:wrap}
 .pie text{font:700 26px Fraunces,Georgia,serif;fill:var(--ink)}
 .pie path{fill:var(--bg);stroke:var(--line);stroke-width:2}
@@ -263,8 +264,8 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
       </div>
       <div class="gstat">
         <label><input type="checkbox" id="gShowOnly"> Alleen woorden uit de uitzendingen</label>
-        <label id="gMissWrap" class="hidden">Lege antwoorden <select id="gMiss"><option value="r">willekeurig 0-3</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
-        <label id="gUnsWrap" class="hidden">Onzekere antwoorden <select id="gUns"><option value="0">geen</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="r">willekeurig 1-6</option></select></label>
+        <label id="gMissWrap" class="hidden rng">Lege antwoorden van <input type="number" id="gMissMin" min="0" max="6" value="0"> tot <input type="number" id="gMissMax" min="0" max="6" value="3"></label>
+        <label id="gUnsWrap" class="hidden rng">Onzekere antwoorden van <input type="number" id="gUnsMin" min="0" max="6" value="0"> tot <input type="number" id="gUnsMax" min="0" max="6" value="0"></label>
         <span id="gScore"></span>
       </div>
     </div>
@@ -631,7 +632,7 @@ function startGame(kind){
   $('gBuy').classList.toggle('hidden', kind !== 'w12'); $('gShuffle').classList.add('hidden');
   $('gCountWrap').classList.remove('hidden'); $('gTimer').classList.add('hidden');
   $('gMissWrap').classList.toggle('hidden', kind !== 'w12'); $('gUnsWrap').classList.toggle('hidden', kind !== 'w12');
-  $('gUns').value = store.get('gUns', '0');
+  const rs = store.get('w12range', {mi: 0, ma: 3, ui: 0, ua: 0}); $('gMissMin').value = rs.mi; $('gMissMax').value = rs.ma; $('gUnsMin').value = rs.ui; $('gUnsMax').value = rs.ua;
   $('gShowOnly').checked = store.get('gShowOnly', false);
   nextPuzzle();
 }
@@ -646,8 +647,9 @@ function nextPuzzle(){
   if (G.kind === 'w12') {
     // Elke vraag hoort bij één (onbekende) positie in het woord.
     G.pos = shuffle([...G.tiles.keys()]);                                        // vraag k -> positie G.pos[k]
-    const sel = $('gMiss').value, m = sel === 'r' ? rnd(4) : Number(sel);
-    const us = $('gUns').value, u = us === 'r' ? 1 + rnd(6) : Number(us);
+    const rg = (a, b) => { let lo = clamp($(a).value), hi = clamp($(b).value); if (lo > hi) [lo, hi] = [hi, lo]; return lo + rnd(hi - lo + 1); };
+    const m = rg('gMissMin', 'gMissMax');
+    const u = Math.min(rg('gUnsMin', 'gUnsMax'), G.tiles.length - m);
     const qs = shuffle([...G.tiles.keys()]);
     const empty = new Set(qs.slice(0, m)), unsure = new Set(qs.slice(m, m + u));
     const COMMON = 'EANRTOISLDGKMUBVPHWCZF'.split('');
@@ -746,8 +748,13 @@ $('gHint').onclick = () => { G.hint = 1; drawPuzzle(); $('gMsg').className = 'gm
 $('gBuy').onclick = () => { if (G.done) return; const h = G.tiles.map((_, s) => s).filter(s => !G.bought.has(s) && (G.reveal[s] === null || G.reveal[s] === '?')); if (!h.length) return; G.bought.add(h[rnd(h.length)]); drawPuzzle(); };
 $('gShuffle').onclick = () => { G.order = shuffle(G.order); drawPuzzle(); };
 $('gShowOnly').onchange = () => { store.set('gShowOnly', $('gShowOnly').checked); nextPuzzle(); };
-$('gMiss').onchange = nextPuzzle;
-$('gUns').onchange = () => { store.set('gUns', $('gUns').value); nextPuzzle(); };
+function clamp(v){ v = Math.round(Number(v)); return isNaN(v) ? 0 : Math.max(0, Math.min(6, v)); }
+['gMissMin','gMissMax','gUnsMin','gUnsMax'].forEach(id => $(id).onchange = () => {
+  $(id).value = clamp($(id).value);
+  store.set('w12range', {mi: clamp($('gMissMin').value), ma: clamp($('gMissMax').value), ui: clamp($('gUnsMin').value), ua: clamp($('gUnsMax').value)});
+  nextPuzzle();
+});
+
 $('gBack').onclick = () => { $('gameView').classList.add('hidden'); showSetup(); };
 document.querySelectorAll('[data-game]').forEach(b => b.onclick = () => startGame(b.dataset.game));
 const LIMIT = {w12: 120, ps: 30, tp: 30};
