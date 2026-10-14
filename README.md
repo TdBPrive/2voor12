@@ -50,7 +50,10 @@ Op het beginscherm staan drie oefenspellen:
 
 - **Paardensprong** – 8 letters in een 3×3-raster; lees het woord met paardensprongen (begin en richting onbekend).
 - **Taartpuzzel** – 9 stukken, één ontbreekt; typ de ontbrekende letter of het hele woord.
-- **12-letterwoord** – losse letters (IJ telt als één), een aantal ontbreekt; met *Koop letter* krijg je er één, met *Husselen* een nieuwe volgorde.
+- **12-letterwoord** – jullie letters staan los (IJ telt als één); een fout beantwoorde vraag geeft een **?** op de juiste plek in het woord.
+  Tik letters om ze in het woord te plaatsen, *Koop letter* onthult een **?**, *Husselen* geeft een nieuwe volgorde.
+  Met *Onzekere antwoorden* (max. 6) zijn sommige letters oranje: het team weet niet zeker of het antwoord goed was.
+  Elk heeft 50% kans fout te zijn; dan past die letter niet en staat er ergens een extra **?**. Na afloop zie je welke klopten.
 
 Met *Alleen woorden uit de uitzendingen* oefen je alleen met woorden die echt in 2 voor 12 voorkwamen
 (45 paardensprongen, 37 taartpuzzels, 86 twaalfletterwoorden); anders komen er extra woorden bij.

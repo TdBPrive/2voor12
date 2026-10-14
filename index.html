@@ -93,6 +93,22 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .tiles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px}
 .tile{width:44px;height:52px;font-size:24px}
 .tile.miss{color:var(--muted);border-style:dashed}
+.tile{position:relative}
+.tile.unsure{border-color:var(--accent);border-style:dashed;background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
+.tile.unsure::after{content:'';width:12px;height:12px;top:-5px;right:-5px;position:absolute;top:-8px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:700 12px/18px Inter,sans-serif;text-align:center}
+.tile.wasok{border-color:var(--good);border-style:solid}
+.tile.wasbad{border-color:var(--bad);border-style:solid;color:var(--bad);text-decoration:line-through}
+.tile.wasbad::after,.tile.wasok::after{position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-radius:50%;font:700 12px/20px Inter,sans-serif;text-align:center}
+.tile.wasbad::after{content:attr(data-real);background:var(--good);color:#fff;text-decoration:none}
+.tile.wasok::after{content:'✓';background:var(--good);color:#fff}
+.tiles.slots{margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed var(--line);flex-wrap:nowrap;max-width:none;gap:4px}
+.tiles.slots .tile{width:min(44px,calc((100vw - 76px) / 12 - 4px));height:auto;aspect-ratio:44/52;font-size:min(24px,calc((100vw - 96px) / 22))}
+.tile.empty{background:transparent;border-style:dotted}
+.tile.qslot{background:var(--chip);color:var(--bad);border-color:var(--bad);border-style:dashed}
+.tile.bought,.tile.qdone{border-color:var(--good);color:var(--good)}
+.tile.used{opacity:.15}
+[data-tile],[data-slot]{cursor:pointer}
+.legend{font-size:13px;color:var(--muted);text-align:center;max-width:480px}
 .gin{display:flex;gap:8px;width:100%;max-width:440px}
 .gin input{flex:1;font:600 20px Inter,sans-serif;padding:10px 12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-transform:uppercase;min-width:0}
 .gbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -226,6 +242,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
       <div class="gstat">
         <label><input type="checkbox" id="gShowOnly"> Alleen woorden uit de uitzendingen</label>
         <label id="gMissWrap" class="hidden">Ontbrekende letters <select id="gMiss"><option value="r">willekeurig 0-3</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+        <label id="gUnsWrap" class="hidden">Onzekere antwoorden <select id="gUns"><option value="0">geen</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="r">willekeurig 1-6</option></select></label>
         <span id="gScore"></span>
       </div>
     </div>
@@ -581,7 +598,7 @@ let G = null; const gScore = store.get('gScore', {});
 const GAMES = {
   ps: {title: 'Paardensprong', intro: 'De 8 letters vormen één woord als je ze leest met de sprong van het paard uit het schaakspel (twee vakjes rechtdoor, één opzij). Begin en richting zijn onbekend. In de quiz telt de eerste letter.'},
   tp: {title: 'Taartpuzzel', intro: 'Lees de letters rond de taart, met of tegen de klok in, vanaf een onbekend stuk. Eén stuk ontbreekt. In de quiz telt de ONTBREKENDE letter. Typ die letter of het hele woord.'},
-  w12: {title: '12-letterwoord', intro: 'Maak van de losse letters één woord van 12 letters (IJ telt als één letter). Lege tegels zijn letters van vragen die fout gingen; met Koop letter krijg je er één.'}
+  w12: {title: '12-letterwoord', intro: 'Maak van jullie letters één woord van 12 letters (IJ telt als één letter). Een fout beantwoorde vraag geeft een ? op de juiste plek in het woord; met Koop letter krijg je zo’n letter. Kies onderaan ook onzekere antwoorden (max. 6): die letters kunnen fout zijn.'}
 };
 function rnd(n){ return Math.floor(Math.random() * n); }
 function startGame(kind){
@@ -590,7 +607,8 @@ function startGame(kind){
   $('setupView').classList.add('hidden'); $('gameView').classList.remove('hidden');
   $('gTitle').textContent = GAMES[kind].title; $('gIntro').textContent = GAMES[kind].intro;
   $('gBuy').classList.toggle('hidden', kind !== 'w12'); $('gShuffle').classList.toggle('hidden', kind !== 'w12');
-  $('gMissWrap').classList.toggle('hidden', kind !== 'w12');
+  $('gMissWrap').classList.toggle('hidden', kind !== 'w12'); $('gUnsWrap').classList.toggle('hidden', kind !== 'w12');
+  $('gUns').value = store.get('gUns', '0');
   $('gShowOnly').checked = store.get('gShowOnly', false);
   nextPuzzle();
 }
@@ -603,8 +621,20 @@ function nextPuzzle(){
   if (G.kind === 'tp') { G.start = rnd(9); G.dir = Math.random() < .5 ? 1 : -1; G.miss = rnd(9); }
   if (G.kind === 'w12') {
     const sel = $('gMiss').value, m = sel === 'r' ? rnd(4) : Number(sel);
-    G.order = shuffle([...G.tiles.keys()]);
-    G.hidden = new Set(shuffle([...G.tiles.keys()]).slice(0, m));
+    G.hidden = new Set(shuffle([...G.tiles.keys()]).slice(0, m));          // fout beantwoord -> ? op de juiste plek
+    const us = $('gUns').value, u = us === 'r' ? 1 + rnd(6) : Number(us);
+    const cand = shuffle([...G.tiles.keys()].filter(i => !G.hidden.has(i))).slice(0, u);
+    const COMMON = 'EANRTOISLDGKMUBVPHWCZF'.split('');
+    G.unsure = new Map(cand.map(i => {                                         // onzeker: 50% kans dat het antwoord fout was
+      const wrong = Math.random() < .5;
+      let shown = G.tiles[i];
+      if (wrong) { const opts = COMMON.filter(c => c !== G.tiles[i]); shown = opts[rnd(opts.length)]; }
+      return [i, {wrong, shown}];
+    }));
+    G.q = new Set([...G.hidden, ...[...G.unsure].filter(([, x]) => x.wrong).map(([i]) => i)]);  // posities met ?
+    G.order = shuffle([...G.tiles.keys()].filter(i => !G.hidden.has(i)));   // tegels die het team heeft
+    G.place = Array(G.tiles.length).fill(null);                              // slot -> tegel
+    G.bought = new Set();
   }
   drawPuzzle(); $('gInput').focus(); updScore();
 }
@@ -630,13 +660,49 @@ function drawPuzzle(){
     b.innerHTML = svg + '</svg>';
   }
   if (G.kind === 'w12') {
-    b.innerHTML = '<div class="tiles">' + G.order.map(i => G.hidden.has(i) && !G.done ? '<div class="tile miss">·</div>' : `<div class="tile ${G.hint && i === 0 ? 'hl' : ''}">${T[i]}</div>`).join('') + '</div>';
+    const letter = i => (G.unsure.get(i) || {}).shown || T[i];
+    const placed = new Set(G.place.filter(x => x !== null));
+    let row = '<div class="tiles slots">' + T.map((t, s) => {
+      if (G.done) {
+        return `<div class="tile ${G.q.has(s) ? 'qdone' : ''}">${t}</div>`;
+      }
+      if ((G.hint && s === 0) || G.bought.has(s)) return `<div class="tile bought">${t}</div>`;
+      if (G.q.has(s)) return '<div class="tile qslot">?</div>';
+      const p = G.place[s];
+      if (p !== null) return `<div class="tile ${G.unsure.has(p) ? 'unsure' : ''}" data-slot="${s}">${letter(p)}</div>`;
+      return `<div class="tile empty" data-slot="${s}"></div>`;
+    }).join('') + '</div>';
+    let pool = '<div class="tiles pool">' + G.order.map(i => {
+      if (G.done) {
+        const un = G.unsure.get(i);
+        if (!un) return '';
+        return un.wrong ? `<div class="tile wasbad" data-real="${T[i]}">${un.shown}</div>` : `<div class="tile wasok">${T[i]}</div>`;
+      }
+      if (placed.has(i)) return `<div class="tile used"></div>`;
+      return `<div class="tile ${G.unsure.has(i) ? 'unsure' : ''}" data-tile="${i}">${letter(i)}</div>`;
+    }).join('') + '</div>';
+    const nq = G.q.size, nu = G.unsure.size;
+    const leg = G.done
+      ? (nu ? 'Onder: je onzekere antwoorden. Groen ✓ = klopte; rood doorgestreept = fout (de juiste letter staat in het groene rondje).' : '')
+      : `Boven het woord, onder jullie letters. Tik een letter om hem te plaatsen, tik in het woord om hem terug te halen. <b>?</b> = fout beantwoorde vraag (op de juiste plek).` +
+        (nu ? ` Oranje = onzeker antwoord: 50% kans dat het fout was. Zie je meer <b>?</b> dan je aan foute antwoorden verwacht, dan past een van de oranje letters niet.` : '');
+    b.innerHTML = row + pool + (leg ? `<p class="legend">${leg}</p>` : '');
+    b.querySelectorAll('[data-tile]').forEach(el => el.onclick = () => {
+      const s = G.place.findIndex((x, k) => x === null && !G.q.has(k) && !(G.hint && k === 0) && !G.bought.has(k));
+      if (s >= 0) { G.place[s] = Number(el.dataset.tile); drawPuzzle(); }
+    });
+    b.querySelectorAll('[data-slot]').forEach(el => el.onclick = () => { G.place[Number(el.dataset.slot)] = null; drawPuzzle(); });
   }
 }
 function norm(x){ return tilesOf(x).join(''); }
 function check(){
   if (G.done) { nextPuzzle(); return; }
-  const v = norm($('gInput').value), word = G.tiles.join('');
+  let v = norm($('gInput').value); const word = G.tiles.join('');
+  if (!v && G.kind === 'w12') {
+    const L = G.tiles.map((t, k) => (G.hint && k === 0) || G.bought.has(k) ? t : G.place[k] !== null ? ((G.unsure.get(G.place[k]) || {}).shown || G.tiles[G.place[k]]) : null);
+    if (L.includes(null)) { $('gMsg').textContent = 'Typ het hele woord, of vul eerst alle vakjes (een ? moet je zelf raden of kopen).'; $('gMsg').className = 'gmsg no'; return; }
+    v = L.join('');
+  }
   let ok = v === word;
   if (G.kind === 'tp' && v === G.tiles[G.miss]) ok = true;
   if (ok) { finishPuzzle(true); }
@@ -655,11 +721,12 @@ $('gCheck').onclick = check;
 $('gInput').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
 $('gNext').onclick = nextPuzzle;
 $('gSolve').onclick = () => { if (!G.done) finishPuzzle(false); };
-$('gHint').onclick = () => { G.hint = 1; drawPuzzle(); $('gMsg').className = 'gmsg'; $('gMsg').textContent = G.kind === 'w12' ? 'De groen omrande letter is de eerste letter.' : 'Het groen omrande vak is de eerste letter.'; };
-$('gBuy').onclick = () => { const h = [...G.hidden]; if (!h.length || G.done) return; G.hidden.delete(h[rnd(h.length)]); drawPuzzle(); };
+$('gHint').onclick = () => { G.hint = 1; if (G.kind === 'w12') G.place[0] = null; drawPuzzle(); $('gMsg').className = 'gmsg'; $('gMsg').textContent = G.kind === 'w12' ? 'De eerste letter staat nu groen in het woord.' : 'Het groen omrande vak is de eerste letter.'; };
+$('gBuy').onclick = () => { const h = [...G.q].filter(k => !G.bought.has(k)); if (!h.length || G.done) return; G.bought.add(h[rnd(h.length)]); drawPuzzle(); };
 $('gShuffle').onclick = () => { G.order = shuffle(G.order); drawPuzzle(); };
 $('gShowOnly').onchange = () => { store.set('gShowOnly', $('gShowOnly').checked); nextPuzzle(); };
 $('gMiss').onchange = nextPuzzle;
+$('gUns').onchange = () => { store.set('gUns', $('gUns').value); nextPuzzle(); };
 $('gBack').onclick = () => { $('gameView').classList.add('hidden'); showSetup(); };
 document.querySelectorAll('[data-game]').forEach(b => b.onclick = () => startGame(b.dataset.game));
 setInterval(() => { if (G && !$('gameView').classList.contains('hidden')) $('gTimer').textContent = G.done ? '' : Math.round((Date.now() - G.t0) / 1000) + ' sec'; }, 500);
