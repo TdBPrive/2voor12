@@ -424,7 +424,7 @@ function answer(good){
   try { speechSynthesis.cancel(); } catch(e){}
   const c = current();
   if (good){ known[c.id] = true; saveKnown(); goodCount++; deck.splice(pos, 1); }
-  else { delete known[c.id]; saveKnown(); const [x] = deck.splice(pos, 1); deck.splice(Math.min(pos + 3 + Math.floor(Math.random()*4), deck.length), 0, x); }
+  else { delete known[c.id]; saveKnown(); const [x] = deck.splice(pos, 1); deck.push(x); }  // achteraan: pas terug na alle andere kaarten
   if (pos >= deck.length) pos = 0;
   if (!deck.length){ finish(); return; }
   render();

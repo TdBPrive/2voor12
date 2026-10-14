@@ -47,6 +47,6 @@ Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de l
 - Kies bij *Vraag* tussen de voorgelezen (uitgebreide) of de korte vraag.
 - De luidsprekerknop leest de vraag hardop voor (Nederlandse computerstem); of zet *Vraag automatisch voorlezen* aan.
 - Tik op de kaart of druk **spatie** om om te draaien.
-- **→** / *Wist ik* en **←** / *Nog niet*. Kaarten die je niet wist komen een paar kaarten later terug.
+- **→** / *Wist ik* en **←** / *Nog niet*. Kaarten die je niet wist gaan achteraan de stapel en komen pas terug als je alle andere kaarten hebt gehad.
 - De voortgang wordt per apparaat en per browser bewaard. *Voortgang wissen* begint opnieuw.
 - *Bladeren met plaatjes* laat alle kaarten van je selectie in één overzicht zien.
