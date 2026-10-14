@@ -101,6 +101,15 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
   <!-- instellingen -->
   <section id="setupView" class="hidden">
     <div class="panel">
+      <h2>Zo werkt het</h2>
+      <ol style="margin:0;padding-left:20px">
+        <li>Kies hieronder welke lijsten je wilt oefenen en klik op <b>Start met stampen</b>.</li>
+        <li>Lees de vraag (of laat hem voorlezen met de luidspreker) en bedenk je antwoord.</li>
+        <li><b>Klik op de vraag</b> of op <b>Toon antwoord</b> om het antwoord te zien. Op een computer kan ook de <kbd>spatiebalk</kbd>.</li>
+        <li>Kies <b>Wist ik</b> (<kbd>→</kbd>) of <b>Nog niet</b> (<kbd>←</kbd>). Wat je niet wist komt aan het eind van de stapel terug.</li>
+      </ol>
+    </div>
+    <div class="panel">
       <h2>Welke lijsten?</h2>
       <div class="lists" id="lists"></div>
       <div class="row" style="margin-top:10px">
@@ -150,8 +159,10 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
         <button id="otherImg">Ander plaatje</button>
         <a id="imgSrc" target="_blank" rel="noopener">bron</a>
       </div>
-      <div class="hint" id="hint">Tik op de kaart of druk <kbd>spatie</kbd> om om te draaien</div>
+      <div class="hint" id="hint">Denk eerst zelf na. Klik daarna op de vraag (of op <b>Toon antwoord</b>) om het antwoord te zien.</div>
     </div>
+    <button class="primary" id="showBtn" style="width:100%;margin-top:12px;padding:14px">Toon antwoord</button>
+    <p class="muted" id="judgeHint" style="text-align:center;font-size:13px;margin:10px 0 0" hidden>Wist je het? Kies hieronder. Wat je niet wist komt aan het eind van de stapel terug.</p>
     <div class="actions hidden" id="actions">
       <button class="btn-bad" id="badBtn">Nog niet ← </button>
       <button class="btn-good" id="goodBtn">→ Wist ik</button>
@@ -336,8 +347,42 @@ async function commonsImages(term){
   const url = 'https://commons.wikimedia.org/w/api.php?format=json&origin=*&action=query&generator=search&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url|mime&iiurlwidth=600&gsrsearch=' + encodeURIComponent(term);
   const j = await getJSON(url);
   const pages = j.query ? Object.values(j.query.pages).sort((a,b)=>a.index-b.index) : [];
-  return pages.map(p => p.imageinfo && p.imageinfo[0]).filter(i => i && /image\/(jpeg|png|gif|webp|svg)/.test(i.mime))
+  return pages.map(p => p.imageinfo && p.imageinfo[0]).filter(i => i && /image\/(jpeg|png|gif|webp|svg)/.test(i.mime) && !/poster|affiche/i.test(i.descriptionurl || ''))
     .map(i => ({src: i.thumburl || i.url, link: i.descriptionurl}));
+}
+const isFilm = c => /film/i.test(c.list);
+const SKIPFILE = /poster|affiche|logo|icon|flag|vlag|\.svg|wiktionary|commons-|edit-|symbol|question|disambig|padlock|ambox|stub|nuvola|crystal|film_reel|filmstrip|clapperboard/i;
+async function fileUrls(lang, files){
+  if (!files.length) return [];
+  const j = await getJSON(API.replace('{lang}', lang) + '&prop=imageinfo&iiprop=url|mime&iiurlwidth=600&titles=' + encodeURIComponent(files.slice(0, 20).join('|')));
+  const pages = j.query ? Object.values(j.query.pages) : [];
+  return pages.map(p => p.imageinfo && p.imageinfo[0]).filter(i => i && /image\/(jpeg|png|webp)/.test(i.mime))
+    .map(i => ({src: i.thumburl || i.url, link: i.descriptionurl}));
+}
+async function pageFiles(lang, query, isSearch){
+  const base = API.replace('{lang}', lang) + '&imlimit=60&piprop=name&redirects=1' + (lang === 'nl' ? '&prop=images|pageimages|langlinks&lllang=en' : '&prop=images|pageimages');
+  const url = base + (isSearch ? '&generator=search&gsrlimit=1&gsrsearch=' + encodeURIComponent(query) : '&titles=' + encodeURIComponent(query));
+  const page = firstPage(await getJSON(url));
+  if (!page || page.missing !== undefined) return {files: [], en: null};
+  const poster = page.pageimage ? 'File:' + page.pageimage.replace(/_/g, ' ') : '';
+  const files = (page.images || []).map(i => i.title).filter(t => t !== poster && t.replace(/^[^:]+:/, 'File:') !== poster && !SKIPFILE.test(t));
+  const en = page.langlinks && page.langlinks[0] && (page.langlinks[0]['*'] || page.langlinks[0].title);
+  return {files, en};
+}
+// Films: geen poster, maar foto's van opnames, acteurs of locaties
+async function sceneList(c){
+  const key = 'scene:' + c.id;
+  if (key in imgCache) return imgCache[key];
+  const term = (c.wiki || c.a).replace(/^\?/, '');
+  let out = [];
+  const nl = await pageFiles('nl', term, true);
+  out = out.concat(await fileUrls('nl', nl.files));
+  if (nl.en) { const en = await pageFiles('en', nl.en, false); out = out.concat(await fileUrls('en', en.files)); }
+  const com = await commonsImages('"' + c.a + '" film');
+  out = out.concat(com.filter(x => !SKIPFILE.test(x.link || '')));
+  const seen = new Set(); out = out.filter(x => !seen.has(x.src) && seen.add(x.src));
+  imgCache[key] = out; saveImgCache();
+  return out;
 }
 function cleanTerm(c){ return (c.wiki && !c.wiki.startsWith('?') ? c.wiki : c.a).replace(/\(.*?\)/g,'').split(/ en |,|\//)[0].trim(); }
 
@@ -345,6 +390,9 @@ function cleanTerm(c){ return (c.wiki && !c.wiki.startsWith('?') ? c.wiki : c.a)
 async function resolveImage(c, idx = 0){
   if (idx === 0 && c.img) return {src: c.img, link: c.img};
   if (!settings.autoImg) return null;
+  if (isFilm(c)) {
+    try { const list = await sceneList(c); return list.length ? list[idx % list.length] : null; } catch (e) { return null; }
+  }
   const key = c.id + '#' + idx;
   if (key in imgCache) return imgCache[key];
   let res = null;
@@ -383,7 +431,7 @@ function render(){
   $('front').classList.toggle('long', qa && qtext === c.long);
   if (settings.autoSpeak) speak($('front').textContent);
   $('extra').textContent = c.extra;
-  $('backWrap').classList.add('hidden'); $('actions').classList.add('hidden');
+  $('backWrap').classList.add('hidden'); $('actions').classList.add('hidden'); $('showBtn').classList.remove('hidden'); $('judgeHint').hidden = true;
   $('hint').classList.remove('hidden');
   $('imgFrontWrap').innerHTML = ''; $('imgBackWrap').innerHTML = ''; $('imgTools').classList.add('hidden');
   $('counter').textContent = `${goodCount}/${total} gekend`;
@@ -416,7 +464,7 @@ function speak(t){
 $('speakBtn').onclick = e => { e.stopPropagation(); speak($('front').textContent); };
 function flip(){
   if (flipped) return; flipped = true;
-  $('backWrap').classList.remove('hidden'); $('actions').classList.remove('hidden'); $('hint').classList.add('hidden');
+  $('backWrap').classList.remove('hidden'); $('actions').classList.remove('hidden'); $('hint').classList.add('hidden'); $('showBtn').classList.add('hidden'); $('judgeHint').hidden = false;
   if (!settings.imgFront) showImage($('imgBackWrap'));
 }
 function answer(good){
@@ -430,17 +478,18 @@ function answer(good){
   render();
 }
 function finish(){
-  $('card').classList.add('hidden'); $('actions').classList.add('hidden');
+  $('card').classList.add('hidden'); $('actions').classList.add('hidden'); $('showBtn').classList.add('hidden'); $('judgeHint').hidden = true;
   $('bar').style.width = '100%';
   $('doneView').classList.remove('hidden');
   $('doneMsg').textContent = `Alle ${total} kaarten gekend. Kies nieuwe lijsten of wis je voortgang voor een herhaling.`;
 }
 $('card').onclick = e => { if (e.target.closest('#imgTools') || e.target.closest('#speakBtn')) return; flip(); };
 $('goodBtn').onclick = () => answer(true);
+$('showBtn').onclick = flip;
 $('badBtn').onclick = () => answer(false);
 $('otherImg').onclick = e => { e.stopPropagation(); imgIdx++; showImage(settings.imgFront ? $('imgFrontWrap') : $('imgBackWrap')); };
 $('startBtn').onclick = start;
-$('backBtn').onclick = showSetup; $('back2Btn').onclick = showSetup; $('againBtn').onclick = showSetup;
+$('backBtn').onclick = () => { $('card').classList.remove('hidden'); showSetup(); }; $('back2Btn').onclick = showSetup; $('againBtn').onclick = showSetup;
 document.addEventListener('keydown', e => {
   if ($('studyView').classList.contains('hidden') || $('card').classList.contains('hidden')) return;
   if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); flip(); }

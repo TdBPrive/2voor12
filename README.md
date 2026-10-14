@@ -21,7 +21,9 @@ kolommen maken mag: de pagina pakt het automatisch op.
 1. Kolom `Afbeelding` – een webadres van een plaatje, of `img/bestandsnaam.jpg` voor een eigen plaatje in de map `img/`.
 2. Kolom `Wiki` – titel van een Wikipedia-artikel; de pagina haalt dan zelf het plaatje op
    (eerst Nederlandse, dan Engelse Wikipedia). Met een `?` ervoor wordt er gezocht.
-3. Anders zoekt de pagina een plaatje op Wikimedia Commons. Klopt het niet, klik dan op
+3. Bij films slaat de pagina de poster over en zoekt hij foto's van opnames, acteurs of locaties
+   (echte filmstills zijn meestal auteursrechtelijk beschermd en staan niet op Wikipedia).
+4. Anders zoekt de pagina een plaatje op Wikimedia Commons. Klopt het niet, klik dan op
    **Ander plaatje**, of vul de kolom `Afbeelding` in.
 
 ## Online zetten met GitHub Pages (gratis, ~5 minuten)
@@ -46,7 +48,7 @@ Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de l
 
 - Kies bij *Vraag* tussen de voorgelezen (uitgebreide) of de korte vraag.
 - De luidsprekerknop leest de vraag hardop voor (Nederlandse computerstem); of zet *Vraag automatisch voorlezen* aan.
-- Tik op de kaart of druk **spatie** om om te draaien.
+- Klik op de vraag of op **Toon antwoord** (of druk **spatie**) om het antwoord te zien.
 - **→** / *Wist ik* en **←** / *Nog niet*. Kaarten die je niet wist gaan achteraan de stapel en komen pas terug als je alle andere kaarten hebt gehad.
 - De voortgang wordt per apparaat en per browser bewaard. *Voortgang wissen* begint opnieuw.
 - *Bladeren met plaatjes* laat alle kaarten van je selectie in één overzicht zien.
