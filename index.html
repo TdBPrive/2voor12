@@ -91,6 +91,8 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .count.p4{animation:beat .4s ease-in-out infinite;--amp:1.4;border-color:var(--bad);color:#fff;background:var(--bad)}
 .count.up{color:var(--bad);border-color:var(--bad)}
 @keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(var(--amp))}}
+.count.calm{font-size:30px;padding:6px 20px}
+.count.low{color:var(--bad);border-color:var(--bad)}
 @media (prefers-reduced-motion:reduce){.count{animation:none!important}}
 @media (max-width:560px){.count{font-size:32px;padding:6px 20px}}
 .gpanel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:16px;align-items:center}
@@ -110,12 +112,13 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .tile.wasbad{border-color:var(--bad);border-style:solid;color:var(--bad);text-decoration:line-through}
 .tile.wasbad::after,.tile.wasok::after{position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-radius:50%;font:700 12px/20px Inter,sans-serif;text-align:center}
 .tile.wasbad::after{content:attr(data-real);background:var(--good);color:#fff;text-decoration:none}
-.tile.empty[data-real]{color:var(--muted)}
+.tile.leeg{background:#4a5260;border-color:#4a5260;color:#e7e2d8}
+.tile.leeg.used{opacity:.35}
 .tile.wasok::after{content:'✓';background:var(--good);color:#fff}
 .w12lab{font-size:12px;color:var(--muted);text-align:center;margin:4px 0 6px;text-transform:uppercase;letter-spacing:.06em}
 .tiles.inrow{flex-wrap:nowrap;max-width:none;gap:4px;margin-bottom:16px}
 .tiles.inrow .tile{width:min(44px,calc((100vw - 76px) / 12 - 4px));height:auto;aspect-ratio:44/52;font-size:min(24px,calc((100vw - 76px) / 22))}
-.tile.closed{background:var(--ink);border-color:var(--ink);opacity:.85}
+.tile.closed{background:var(--chip);border-color:var(--line);border-width:2px}
 .tile.placed{border-color:var(--ink)}
 .tiles.slots{margin-bottom:6px;flex-wrap:nowrap;max-width:none;gap:4px}
 .tiles.slots .tile{width:min(44px,calc((100vw - 76px) / 12 - 4px));height:auto;aspect-ratio:44/52;font-size:min(24px,calc((100vw - 96px) / 22))}
@@ -615,9 +618,9 @@ const KN = [[0,0],[1,2],[2,0],[0,1],[2,2],[1,0],[0,2],[2,1]];  // paardensprong-
 window._game = () => G;
 let G = null; const gScore = store.get('gScore', {});
 const GAMES = {
-  ps: {title: 'Paardensprong', intro: 'De 8 letters vormen één woord als je ze leest met de sprong van het paard uit het schaakspel (twee vakjes rechtdoor, één opzij). Begin en richting zijn onbekend. In de quiz telt de eerste letter.'},
-  tp: {title: 'Taartpuzzel', intro: 'Lees de letters rond de taart, met of tegen de klok in, vanaf een onbekend stuk. Eén stuk ontbreekt. In de quiz telt de ONTBREKENDE letter. Typ die letter of het hele woord.'},
-  w12: {title: '12-letterwoord', intro: 'Je hebt 2 minuten. Boven staan de antwoorden van het team per vraag: zeker, onzeker (oranje, 50% kans fout) of leeg. Tik een antwoord aan en de letter komt op de juiste plek in het woord; een fout of leeg antwoord wordt daar een ?. Raad het woord van 12 letters (IJ telt als één) en typ het in. Koop letter onthult een vakje.'}
+  ps: {title: 'Paardensprong', intro: 'Je hebt 30 seconden. De 8 letters vormen één woord als je ze leest met de sprong van het paard uit het schaakspel (twee vakjes rechtdoor, één opzij). Begin en richting zijn onbekend. In de quiz telt de eerste letter.'},
+  tp: {title: 'Taartpuzzel', intro: 'Je hebt 30 seconden. Lees de letters rond de taart, met of tegen de klok in, vanaf een onbekend stuk. Eén stuk ontbreekt. In de quiz telt de ONTBREKENDE letter. Typ die letter of het hele woord.'},
+  w12: {title: '12-letterwoord', intro: 'Je hebt 2 minuten. Boven staan de antwoorden van het team per vraag: zeker, onzeker (oranje, 50% kans fout) of leeg (donkergrijs). Tik een antwoord aan en de letter komt op de juiste plek in het woord; een fout of leeg antwoord wordt daar een ?. Raad het woord van 12 letters (IJ telt als één) en typ het in. Koop letter onthult een vakje.'}
 };
 function rnd(n){ return Math.floor(Math.random() * n); }
 function startGame(kind){
@@ -626,7 +629,7 @@ function startGame(kind){
   $('setupView').classList.add('hidden'); $('gameView').classList.remove('hidden');
   $('gTitle').textContent = GAMES[kind].title; $('gIntro').textContent = GAMES[kind].intro;
   $('gBuy').classList.toggle('hidden', kind !== 'w12'); $('gShuffle').classList.add('hidden');
-  $('gCountWrap').classList.toggle('hidden', kind !== 'w12'); $('gTimer').classList.toggle('hidden', kind === 'w12');
+  $('gCountWrap').classList.remove('hidden'); $('gTimer').classList.add('hidden');
   $('gMissWrap').classList.toggle('hidden', kind !== 'w12'); $('gUnsWrap').classList.toggle('hidden', kind !== 'w12');
   $('gUns').value = store.get('gUns', '0');
   $('gShowOnly').checked = store.get('gShowOnly', false);
@@ -690,11 +693,11 @@ function drawPuzzle(){
     const inp = '<div class="w12lab">Antwoorden van het team (vraag 1 t/m ' + n + ')</div><div class="tiles inrow">' + G.ans.map((a, k) => {
       if (G.done) {
         if (a.state === 'onzeker') return a.ok ? `<div class="tile wasok" title="vraag ${k+1}">${a.shown}</div>` : `<div class="tile wasbad" data-real="${T[G.pos[k]]}" title="vraag ${k+1}">${a.shown}</div>`;
-        if (a.state === 'leeg') return `<div class="tile empty" data-real="${T[G.pos[k]]}">${T[G.pos[k]]}</div>`;
+        if (a.state === 'leeg') return `<div class="tile leeg" title="vraag ${k+1}: leeg">${T[G.pos[k]]}</div>`;
         return `<div class="tile">${a.shown}</div>`;
       }
-      const cls = a.state === 'leeg' ? 'empty' : a.state === 'onzeker' ? 'unsure' : '';
-      return `<div class="tile ${cls} ${G.used.has(k) ? 'used' : ''}" ${G.used.has(k) ? '' : `data-q="${k}"`} title="vraag ${k+1}">${a.shown}</div>`;
+      const cls = a.state === 'leeg' ? 'leeg' : a.state === 'onzeker' ? 'unsure' : '';
+      return `<div class="tile ${cls} ${G.used.has(k) ? 'used' : ''}" ${G.used.has(k) ? '' : `data-q="${k}"`} title="vraag ${k+1}">${a.state === 'leeg' ? '–' : a.shown}</div>`;
     }).join('') + '</div>';
     const sol = '<div class="w12lab">Oplossingswoord</div><div class="tiles slots">' + T.map((t, s) => {
       if (G.done) return `<div class="tile ${G.reveal[s] === null ? '' : G.reveal[s] === '?' ? 'qdone' : 'placed'}">${t}</div>`;
@@ -706,8 +709,8 @@ function drawPuzzle(){
     }).join('') + '</div>';
     const nu = G.ans.filter(a => a.state === 'onzeker').length;
     const leg = G.done
-      ? 'Boven: groen ✓ = onzeker antwoord klopte, rood doorgestreept = fout (juiste letter in het groene rondje); gestippeld = leeg antwoord.'
-      : 'Tik een antwoord aan: de letter komt op de juiste plek in het woord. Was het antwoord fout of leeg, dan verschijnt daar een <b>?</b>. Oranje = onzeker (50% kans fout), gestippeld = leeg.' + (nu ? '' : '');
+      ? 'Boven: groen ✓ = onzeker antwoord klopte, rood doorgestreept = fout (juiste letter in het groene rondje); donkergrijs = leeg antwoord (met de letter die het had moeten zijn).'
+      : 'Tik een antwoord aan: de letter komt op de juiste plek in het woord. Was het antwoord fout of leeg, dan verschijnt daar een <b>?</b>. Oranje = onzeker (50% kans fout), donkergrijs met streepje = leeg.' + (nu ? '' : '');
     b.innerHTML = inp + sol + `<p class="legend">${leg} Geplaatst: ${G.used.size} van ${n}.</p>`;
     b.querySelectorAll('[data-q]').forEach(el => el.onclick = () => {
       const k = Number(el.dataset.q), a = G.ans[k], p = G.pos[k];
@@ -747,15 +750,15 @@ $('gMiss').onchange = nextPuzzle;
 $('gUns').onchange = () => { store.set('gUns', $('gUns').value); nextPuzzle(); };
 $('gBack').onclick = () => { $('gameView').classList.add('hidden'); showSetup(); };
 document.querySelectorAll('[data-game]').forEach(b => b.onclick = () => startGame(b.dataset.game));
-const W12_TIME = 120;
+const LIMIT = {w12: 120, ps: 30, tp: 30};
 setInterval(() => {
   if (!G || $('gameView').classList.contains('hidden')) return;
-  if (G.kind !== 'w12') { $('gTimer').textContent = G.done ? '' : Math.round((Date.now() - G.t0) / 1000) + ' sec'; return; }
+  const W12_TIME = LIMIT[G.kind];
   const c = $('gCount');
-  if (G.done) { c.className = 'count' + (G.timeUp ? ' up' : ''); if (G.timeUp) c.textContent = '0:00'; return; }
+  if (G.done) { c.className = 'count' + (G.kind !== 'w12' ? ' calm' : '') + (G.timeUp ? ' up' : ''); if (G.timeUp) c.textContent = '0:00'; return; }
   const left = Math.max(0, W12_TIME - (Date.now() - G.t0) / 1000), sec = Math.ceil(left);
   c.textContent = Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
-  const cls = left <= 10 ? 'p4' : left <= 30 ? 'p3' : left <= 60 ? 'p2' : left <= 90 ? 'p1' : '';
+  const cls = G.kind !== 'w12' ? (left <= 10 ? 'calm low' : 'calm') : left <= 10 ? 'p4' : left <= 30 ? 'p3' : left <= 60 ? 'p2' : left <= 90 ? 'p1' : '';
   if (c.dataset.cls !== cls) { c.className = 'count ' + cls; c.dataset.cls = cls; }
   if (left <= 0) { G.timeUp = true; finishPuzzle(false); $('gMsg').textContent = 'De tijd is op! ' + $('gMsg').textContent; }
 }, 200);
