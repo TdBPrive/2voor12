@@ -48,10 +48,10 @@ Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de l
 
 Op het beginscherm staan drie oefenspellen:
 
-- **Paardensprong** – 8 letters in een 3×3-raster; lees het woord met paardensprongen (begin en richting onbekend).
-- **Taartpuzzel** – 9 stukken, één ontbreekt; typ de ontbrekende letter of het hele woord.
+- **Paardensprong** – 30 seconden; 8 letters in een 3×3-raster; lees het woord met paardensprongen (begin en richting onbekend).
+- **Taartpuzzel** – 30 seconden; 9 stukken, één ontbreekt; typ de ontbrekende letter of het hele woord.
 - **12-letterwoord** – je hebt 2 minuten (de klok bovenin klopt steeds harder naarmate de tijd opraakt). Boven staan de 12 antwoorden van het team, per vraag: zeker, onzeker (oranje, 50% kans fout) of leeg
-  (gestippeld). Tik een antwoord aan: de letter komt op de juiste plek in het oplossingswoord; een fout of leeg antwoord wordt
+  (donkergrijs met streepje). Tik een antwoord aan: de letter komt op de juiste plek in het oplossingswoord; een fout of leeg antwoord wordt
   daar een **?**. Typ het woord (IJ telt als één letter). *Koop letter* onthult een vakje. Kies onderaan het aantal lege
   (0-4) en onzekere (0-6) antwoorden. Na afloop zie je welke onzekere antwoorden klopten.
 
