@@ -69,5 +69,5 @@ Met *Alleen woorden uit de uitzendingen* oefen je alleen met woorden die echt in
 - De luidsprekerknop leest de vraag hardop voor (Nederlandse computerstem); of zet *Vraag automatisch voorlezen* aan.
 - Klik op de vraag of op **Toon antwoord** (of druk **spatie**) om het antwoord te zien.
 - **→** / *Wist ik* en **←** / *Nog niet*. Kaarten die je niet wist gaan achteraan de stapel en komen pas terug als je alle andere kaarten hebt gehad.
-- De voortgang wordt per apparaat en per browser bewaard. *Voortgang wissen* begint opnieuw.
+- De voortgang wordt per apparaat en per browser bewaard. Met **wis** naast een lijst wis je alleen die lijst; onder de spellen staan de scores met per spel een **wis**-knop (ook in het spel zelf: *wis score*). *Alle voortgang wissen* wist alles. Wissen vraagt steeds om een tweede klik.
 - *Bladeren met plaatjes* laat alle kaarten van je selectie in één overzicht zien.
