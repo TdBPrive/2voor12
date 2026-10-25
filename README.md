@@ -47,7 +47,7 @@ Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de l
 
 ## Puzzels oefenen
 
-Op het beginscherm staan drie oefenspellen:
+Op het beginscherm staan vier oefenspellen:
 
 - **Paardensprong** – 30 seconden; 8 letters in een 3×3-raster; lees het woord met paardensprongen (begin en richting onbekend).
 - **Taartpuzzel** – 30 seconden; 9 stukken, één ontbreekt; typ de ontbrekende letter of het hele woord.
@@ -57,6 +57,12 @@ Op het beginscherm staan drie oefenspellen:
   lege en onzekere antwoorden (elk 0-6) er per ronde zijn; de pagina kiest daartussen een willekeurig aantal.
   Met *Zoals in de uitzendingen* volgt het aantal foute antwoorden de echte verdeling uit 87 teamrondes
   (0 fout 36%, 1: 30%, 2: 14%, 3: 11%, 4: 7%, 5: 2%); er komen evenveel onzekere-maar-goede antwoorden bij, leeg is zeldzaam. Na afloop zie je welke onzekere antwoorden klopten.
+
+- **Uitzendingen naspelen** – de 87 echte 12-letterwoorden uit S25-S26, met precies de letters die het team had, op de plek van de vraag
+  (ook foute letters; een streepje = geen antwoord). Tik een vakje aan om die letter te kopen: goed antwoord = de letter op zijn plek, fout = een streepje.
+  Na afloop zie je welke antwoorden fout waren, hoeveel letters het team in de uitzending kocht en of ze het woord raadden.
+  Kies bij *Ronde* een vaste ronde of *Willekeurig* (eerst de rondes die je nog niet gespeeld hebt).
+  De gekochte letters zijn geteld uit de transcripties; bij een paar rondes kan dat er één naast zitten.
 
 Bij de paardensprong en de taartpuzzel kies je met *Richting* of je willekeurig, alleen met de klok mee of alleen tegen de klok in oefent.
 
