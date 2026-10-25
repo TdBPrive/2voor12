@@ -57,6 +57,8 @@ Op het beginscherm staan drie oefenspellen:
   Met *Zoals in de uitzendingen* volgt het aantal foute antwoorden de echte verdeling uit 87 teamrondes
   (0 fout 36%, 1: 30%, 2: 14%, 3: 11%, 4: 7%, 5: 2%); er komen evenveel onzekere-maar-goede antwoorden bij, leeg is zeldzaam. Na afloop zie je welke onzekere antwoorden klopten.
 
+Bij de paardensprong en de taartpuzzel kies je met *Richting* of je willekeurig, alleen met de klok mee of alleen tegen de klok in oefent.
+
 Met *Alleen woorden uit de uitzendingen* oefen je alleen met woorden die echt in 2 voor 12 voorkwamen
 (45 paardensprongen, 37 taartpuzzels, 86 twaalfletterwoorden); anders komen er extra woorden bij.
 

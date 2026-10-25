@@ -264,6 +264,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
       </div>
       <div class="gstat">
         <label><input type="checkbox" id="gShowOnly"> Alleen woorden uit de uitzendingen</label>
+        <label id="gDirWrap" class="hidden">Richting <select id="gDir"><option value="rnd">Willekeurig</option><option value="cw">Met de klok mee</option><option value="ccw">Tegen de klok in</option></select></label>
         <label id="gRealWrap" class="hidden" title="Aantal fouten volgens 87 echte teamrondes: 0 fout 36%, 1 fout 30%, 2 fout 14%, 3 fout 11%, 4 fout 7%, 5 fout 2%"><input type="checkbox" id="gReal"> Zoals in de uitzendingen</label>
         <label id="gMissWrap" class="hidden rng">Lege antwoorden van <input type="number" id="gMissMin" min="0" max="6" value="0"> tot <input type="number" id="gMissMax" min="0" max="6" value="3"></label>
         <label id="gUnsWrap" class="hidden rng">Onzekere antwoorden van <input type="number" id="gUnsMin" min="0" max="6" value="0"> tot <input type="number" id="gUnsMax" min="0" max="6" value="0"></label>
@@ -636,6 +637,7 @@ function startGame(kind){
   $('gReal').checked = store.get('gReal', false); syncReal();
   const rs = store.get('w12range', {mi: 0, ma: 3, ui: 0, ua: 0}); $('gMissMin').value = rs.mi; $('gMissMax').value = rs.ma; $('gUnsMin').value = rs.ui; $('gUnsMax').value = rs.ua;
   $('gShowOnly').checked = store.get('gShowOnly', false);
+  $('gDirWrap').classList.toggle('hidden', kind === 'w12'); $('gDir').value = store.get('gDir', 'rnd'); syncDir();
   nextPuzzle();
 }
 function nextPuzzle(){
@@ -644,8 +646,9 @@ function nextPuzzle(){
   G.word = w; G.tiles = tilesOf(w); G.done = false; G.hint = 0; G.t0 = Date.now(); G.timeUp = false;
   $('gCount').dataset.cls = 'x';
   $('gInput').value = ''; $('gMsg').textContent = ''; $('gMsg').className = 'gmsg';
-  if (G.kind === 'ps') { G.start = rnd(8); G.dir = Math.random() < .5 ? 1 : -1; }
-  if (G.kind === 'tp') { G.start = rnd(9); G.dir = Math.random() < .5 ? 1 : -1; G.miss = rnd(9); }
+  const pickDir = () => { const d = $('gDir').value; return d === 'cw' ? 1 : d === 'ccw' ? -1 : Math.random() < .5 ? 1 : -1; };  // +1 = met de klok mee
+  if (G.kind === 'ps') { G.start = rnd(8); G.dir = pickDir(); }
+  if (G.kind === 'tp') { G.start = rnd(9); G.dir = pickDir(); G.miss = rnd(9); }
   if (G.kind === 'w12') {
     // Elke vraag hoort bij één (onbekende) positie in het woord.
     G.pos = shuffle([...G.tiles.keys()]);                                        // vraag k -> positie G.pos[k]
@@ -761,6 +764,15 @@ $('gSolve').onclick = () => { if (!G.done) finishPuzzle(false); };
 $('gHint').onclick = () => { G.hint = 1; drawPuzzle(); $('gMsg').className = 'gmsg'; $('gMsg').textContent = G.kind === 'w12' ? 'De eerste letter staat nu groen in het woord.' : 'Het groen omrande vak is de eerste letter.'; };
 $('gBuy').onclick = () => { if (G.done) return; const h = G.tiles.map((_, s) => s).filter(s => !G.bought.has(s) && (G.reveal[s] === null || G.reveal[s] === '?')); if (!h.length) return; G.bought.add(h[rnd(h.length)]); drawPuzzle(); };
 $('gShuffle').onclick = () => { G.order = shuffle(G.order); drawPuzzle(); };
+function syncDir(){
+  if (!G || G.kind === 'w12') return;
+  const d = $('gDir').value, txt = d === 'cw' ? 'met de klok mee' : d === 'ccw' ? 'tegen de klok in' : '';
+  let intro = GAMES[G.kind].intro;
+  if (txt && G.kind === 'ps') intro = intro.replace('Begin en richting zijn onbekend.', 'De richting is ' + txt + '; het begin is onbekend.');
+  if (txt && G.kind === 'tp') intro = intro.replace('met of tegen de klok in, vanaf een onbekend stuk', txt + ', vanaf een onbekend stuk');
+  $('gIntro').textContent = intro;
+}
+$('gDir').onchange = () => { store.set('gDir', $('gDir').value); syncDir(); nextPuzzle(); };
 $('gShowOnly').onchange = () => { store.set('gShowOnly', $('gShowOnly').checked); nextPuzzle(); };
 function syncReal(){ const on = $('gReal').checked; ['gMissMin','gMissMax','gUnsMin','gUnsMax'].forEach(id => $(id).disabled = on); $('gMissWrap').style.opacity = $('gUnsWrap').style.opacity = on ? .45 : 1; }
 $('gReal').onchange = () => { store.set('gReal', $('gReal').checked); syncReal(); nextPuzzle(); };
