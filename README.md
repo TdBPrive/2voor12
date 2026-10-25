@@ -21,7 +21,7 @@ kolommen maken mag: de pagina pakt het automatisch op.
 1. Kolom `Afbeelding` – een webadres van een plaatje, of `img/bestandsnaam.jpg` voor een eigen plaatje in de map `img/`.
 2. Kolom `Wiki` – titel van een Wikipedia-artikel; de pagina haalt dan zelf het plaatje op
    (eerst Nederlandse, dan Engelse Wikipedia). Met een `?` ervoor wordt er gezocht. Met een `!` ervoor
-   wordt alleen een sfeerbeeld over dat onderwerp gezocht (gebruikt bij Literatuurprijzen, zodat titel of auteur niet in beeld komen).
+   wordt alleen een sfeerbeeld over dat onderwerp gezocht (gebruikt bij de literatuurlijsten, zodat titel of auteur niet in beeld komen).
 3. Bij films slaat de pagina de poster over en zoekt hij foto's van opnames, acteurs of locaties
    (echte filmstills zijn meestal auteursrechtelijk beschermd en staan niet op Wikipedia).
 4. Anders zoekt de pagina een plaatje op Wikimedia Commons. Klopt het niet, klik dan op
