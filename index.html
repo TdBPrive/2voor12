@@ -208,9 +208,9 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
         <label>Prioriteit <select id="prio"><option value="1">Alleen prio 1</option><option value="2" selected>Prio 1 en 2</option></select></label>
         <label>Vraag <select id="style"><option value="long">Voorgelezen (uitgebreid)</option><option value="short">Kort</option></select></label>
         <label>Richting <select id="dir"><option value="qa">Vraag → antwoord</option><option value="aq">Antwoord → vraag</option></select></label>
+        <label>Eerder gevraagd <select id="asked"><option value="all" selected>Allebei</option><option value="yes">Alleen eerder gevraagd</option><option value="no">Alleen niet eerder gevraagd</option></select></label>
         <label><input type="checkbox" id="imgFront" checked> Plaatje bij de vraag (uit = pas bij het antwoord)</label>
         <label><input type="checkbox" id="onlyUnknown" checked> Sla kaarten over die ik al ken</label>
-        <label><input type="checkbox" id="onlyAsked"> Alleen eerder gevraagd</label>
         <label><input type="checkbox" id="autoImg" checked> Plaatjes automatisch via Wikipedia</label>
         <label><input type="checkbox" id="autoSpeak"> Vraag automatisch voorlezen</label>
       </div>
@@ -388,7 +388,7 @@ let seen = store.get('seen', {});     // id -> aantal keer getoond
 const saveSeen = () => store.set('seen', seen);
 
 // ---------- instellingen ----------
-const settings = Object.assign({lists: null, prio: '2', dir: 'qa', style: 'long', imgFront: false, onlyUnknown: true, onlyAsked: false, autoImg: true, autoSpeak: false}, store.get('settings', {}), {imgFront: store.get('imgFront2', true)});
+const settings = Object.assign({lists: null, prio: '2', dir: 'qa', style: 'long', imgFront: false, onlyUnknown: true, asked: 'all', autoImg: true, autoSpeak: false}, store.get('settings', {}), {imgFront: store.get('imgFront2', true)});
 function showSetup(){
   $('loadView').classList.add('hidden');
   ['studyView','browseView','gameView'].forEach(v => $(v).classList.add('hidden'));
@@ -417,22 +417,23 @@ function showSetup(){
     gw.appendChild(b);
   });
   if (gw.childNodes.length) gw.insertAdjacentHTML('afterbegin', '<span>Scores:</span>');
-  ['prio','dir','style'].forEach(id => $(id).value = settings[id]);
-  ['imgFront','onlyUnknown','onlyAsked','autoImg','autoSpeak'].forEach(id => $(id).checked = settings[id]);
+  ['prio','dir','style','asked'].forEach(id => $(id).value = settings[id]);
+  ['imgFront','onlyUnknown','autoImg','autoSpeak'].forEach(id => $(id).checked = settings[id]);
   updateCount();
 }
 function readSettings(){
   settings.lists = [...document.querySelectorAll('#lists input:checked')].map(i => i.value);
   store.set('imgFront2', $('imgFront').checked);
-  settings.prio = $('prio').value; settings.dir = $('dir').value; settings.style = $('style').value;
-  ['imgFront','onlyUnknown','onlyAsked','autoImg','autoSpeak'].forEach(id => settings[id] = $(id).checked);
+  settings.prio = $('prio').value; settings.dir = $('dir').value; settings.style = $('style').value; settings.asked = $('asked').value;
+  ['imgFront','onlyUnknown','autoImg','autoSpeak'].forEach(id => settings[id] = $(id).checked);
   store.set('settings', settings);
 }
 function selection(ignoreKnown){
   readSettings();
   let cards = settings.lists.flatMap(n => LISTS[n] || []);
   cards = cards.filter(c => c.prio <= Number(settings.prio));
-  if (settings.onlyAsked) cards = cards.filter(c => c.asked);
+  if (settings.asked === 'yes') cards = cards.filter(c => c.asked);
+  else if (settings.asked === 'no') cards = cards.filter(c => !c.asked);
   if (settings.onlyUnknown && !ignoreKnown) cards = cards.filter(c => !known[c.id]);
   return cards;
 }
