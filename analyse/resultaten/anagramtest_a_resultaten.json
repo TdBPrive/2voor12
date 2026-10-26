@@ -1,0 +1,258 @@
+{
+"afwasproduct": {
+"how": "opgegeven",
+"k": 2,
+"ms": 15784,
+"solved": false,
+"t": 1793048387053,
+"tries": 0
+},
+"badkamerraam": {
+"how": "goed",
+"k": 4,
+"ms": 22089,
+"solved": true,
+"t": 1793048535075,
+"tries": 0
+},
+"bankcontrole": {
+"how": "goed",
+"k": 6,
+"ms": 20147,
+"solved": true,
+"t": 1793048641667,
+"tries": 0
+},
+"beheerorgaan": {
+"how": "opgegeven",
+"k": 2,
+"ms": 28410,
+"solved": false,
+"t": 1793047832361,
+"tries": 0
+},
+"belastingvrij": {
+"how": "goed",
+"k": 4,
+"ms": 28069,
+"solved": true,
+"t": 1793048175524,
+"tries": 0
+},
+"beursverloop": {
+"how": "goed",
+"k": 6,
+"ms": 20441,
+"solved": true,
+"t": 1793048411368,
+"tries": 0
+},
+"bezoekschema": {
+"how": "opgegeven",
+"k": 2,
+"ms": 60298,
+"solved": false,
+"t": 1793048315200,
+"tries": 0
+},
+"cateringstop": {
+"how": "opgegeven",
+"k": 2,
+"ms": 33517,
+"solved": false,
+"t": 1793048117144,
+"tries": 0
+},
+"familiegeest": {
+"how": "goed",
+"k": 6,
+"ms": 12358,
+"solved": true,
+"t": 1793047628981,
+"tries": 0
+},
+"geboortegrot": {
+"how": "goed",
+"k": 6,
+"ms": 32784,
+"solved": true,
+"t": 1793048488732,
+"tries": 0
+},
+"gezichtshaar": {
+"how": "goed",
+"k": 2,
+"ms": 25737,
+"solved": true,
+"t": 1793047980679,
+"tries": 1
+},
+"gildesysteem": {
+"how": "opgegeven",
+"k": 0,
+"ms": 22580,
+"solved": false,
+"t": 1793048143498,
+"tries": 0
+},
+"herkomstnaam": {
+"how": "goed",
+"k": 6,
+"ms": 13290,
+"solved": true,
+"t": 1793048251596,
+"tries": 0
+},
+"klachtenboek": {
+"how": "opgegeven",
+"k": 0,
+"ms": 8529,
+"solved": false,
+"t": 1793048509031,
+"tries": 0
+},
+"kredietkaart": {
+"how": "opgegeven",
+"k": 0,
+"ms": 16836,
+"solved": false,
+"t": 1793048554500,
+"tries": 0
+},
+"kringgesprek": {
+"how": "goed",
+"k": 6,
+"ms": 6588,
+"solved": true,
+"t": 1793047866766,
+"tries": 0
+},
+"lichtplafond": {
+"how": "opgegeven",
+"k": 0,
+"ms": 43403,
+"solved": false,
+"t": 1793047722044,
+"tries": 0
+},
+"liefdegevoel": {
+"how": "opgegeven",
+"k": 4,
+"ms": 47328,
+"solved": false,
+"t": 1793048617764,
+"tries": 2
+},
+"mensenwereld": {
+"how": "goed",
+"k": 2,
+"ms": 13499,
+"solved": true,
+"t": 1793047897180,
+"tries": 0
+},
+"milieudelict": {
+"how": "opgegeven",
+"k": 0,
+"ms": 5414,
+"solved": false,
+"t": 1793048496636,
+"tries": 0
+},
+"openingsstuk": {
+"how": "opgegeven",
+"k": 4,
+"ms": 48518,
+"solved": false,
+"t": 1793048367411,
+"tries": 0
+},
+"pizzakoerier": {
+"how": "opgegeven",
+"k": 4,
+"ms": 37658,
+"solved": false,
+"t": 1793048452099,
+"tries": 0
+},
+"politiestraf": {
+"how": "goed",
+"k": 4,
+"ms": 19133,
+"solved": true,
+"t": 1793047650871,
+"tries": 0
+},
+"projectgroep": {
+"how": "goed",
+"k": 6,
+"ms": 27682,
+"solved": true,
+"t": 1793047928303,
+"tries": 0
+},
+"rijksrekening": {
+"how": "opgegeven",
+"k": 0,
+"ms": 17645,
+"solved": false,
+"t": 1793047856304,
+"tries": 0
+},
+"ruimtevlucht": {
+"how": "goed",
+"k": 2,
+"ms": 14706,
+"solved": true,
+"t": 1793047951644,
+"tries": 0
+},
+"salarisgrens": {
+"how": "goed",
+"k": 2,
+"ms": 22992,
+"solved": true,
+"t": 1793048077481,
+"tries": 0
+},
+"schermmasker": {
+"how": "opgegeven",
+"k": 4,
+"ms": 56163,
+"solved": false,
+"t": 1793048234299,
+"tries": 0
+},
+"suikersector": {
+"how": "opgegeven",
+"k": 0,
+"ms": 33562,
+"solved": false,
+"t": 1793048020426,
+"tries": 0
+},
+"volkselement": {
+"how": "opgegeven",
+"k": 0,
+"ms": 8055,
+"solved": false,
+"t": 1793048566543,
+"tries": 0
+},
+"voorraadlijst": {
+"how": "goed",
+"k": 6,
+"ms": 39453,
+"solved": true,
+"t": 1793047600876,
+"tries": 0
+},
+"wapenbestand": {
+"how": "goed",
+"k": 4,
+"ms": 20481,
+"solved": true,
+"t": 1793047674010,
+"tries": 0
+}
+}
