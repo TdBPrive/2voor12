@@ -1,0 +1,194 @@
+{
+"banenbestand": {
+"k": 0,
+"ms": 19200,
+"solved": false,
+"tries": 1
+},
+"beslismoment": {
+"k": 2,
+"ms": 19100,
+"solved": false,
+"tries": 0
+},
+"besteladvies": {
+"k": 6,
+"ms": 20300,
+"solved": true,
+"tries": 0
+},
+"bovenbuurman": {
+"k": 0,
+"ms": 9100,
+"solved": false,
+"tries": 0
+},
+"computerfoto": {
+"k": 4,
+"ms": 18400,
+"solved": true,
+"tries": 0
+},
+"debattrainer": {
+"k": 0,
+"ms": 7000,
+"solved": false,
+"tries": 0
+},
+"draagvleugel": {
+"k": 2,
+"ms": 20700,
+"solved": false,
+"tries": 0
+},
+"garageplaats": {
+"k": 4,
+"ms": 25200,
+"solved": true,
+"tries": 0
+},
+"geheugenspel": {
+"k": 0,
+"ms": 18600,
+"solved": false,
+"tries": 0
+},
+"grappenmaker": {
+"k": 6,
+"ms": 17300,
+"solved": true,
+"tries": 0
+},
+"hiphopmuziek": {
+"k": 6,
+"ms": 11000,
+"solved": true,
+"tries": 0
+},
+"historieblad": {
+"k": 6,
+"ms": 19500,
+"solved": true,
+"tries": 0
+},
+"kasteelroman": {
+"k": 0,
+"ms": 11600,
+"solved": false,
+"tries": 0
+},
+"klantengroep": {
+"k": 2,
+"ms": 15200,
+"solved": false,
+"tries": 0
+},
+"klantenvraag": {
+"k": 0,
+"ms": 11200,
+"solved": false,
+"tries": 0
+},
+"kortsluiting": {
+"k": 6,
+"ms": 33600,
+"solved": true,
+"tries": 0
+},
+"liedjesavond": {
+"k": 6,
+"ms": 11200,
+"solved": true,
+"tries": 0
+},
+"olievoorraad": {
+"k": 4,
+"ms": 40000,
+"solved": false,
+"tries": 0
+},
+"pianoconcert": {
+"k": 4,
+"ms": 54800,
+"solved": false,
+"tries": 0
+},
+"plaatsnummer": {
+"k": 4,
+"ms": 34400,
+"solved": true,
+"tries": 1
+},
+"politiekorps": {
+"k": 0,
+"ms": 2700,
+"solved": false,
+"tries": 0
+},
+"rechtskennis": {
+"k": 4,
+"ms": 24300,
+"solved": true,
+"tries": 0
+},
+"scanapparaat": {
+"k": 2,
+"ms": 41000,
+"solved": false,
+"tries": 0
+},
+"scholengroep": {
+"k": 2,
+"ms": 27400,
+"solved": true,
+"tries": 0
+},
+"sekstherapie": {
+"k": 6,
+"ms": 31500,
+"solved": true,
+"tries": 0
+},
+"sleephelling": {
+"k": 4,
+"ms": 41900,
+"solved": false,
+"tries": 0
+},
+"verkoopactie": {
+"k": 4,
+"ms": 8700,
+"solved": true,
+"tries": 0
+},
+"verkoopsprijs": {
+"k": 0,
+"ms": 28500,
+"solved": false,
+"tries": 0
+},
+"videoarchief": {
+"k": 6,
+"ms": 9700,
+"solved": true,
+"tries": 0
+},
+"winkelstraat": {
+"k": 2,
+"ms": 32000,
+"solved": false,
+"tries": 0
+},
+"zielenherder": {
+"k": 2,
+"ms": 14700,
+"solved": true,
+"tries": 0
+},
+"zwembadwater": {
+"k": 2,
+"ms": 41100,
+"solved": false,
+"tries": 0
+}
+}

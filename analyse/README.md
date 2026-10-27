@@ -18,9 +18,9 @@ De site zelf heeft deze map niet nodig.
 | `sim.py` | De simulatie. Speelt echte rondes (`uitzending`), de 86 echte woorden (`echt`) of willekeurige OpenTaal-woorden (`lijst`) na. |
 | `ijken.sh` | Hulpfunctie `run` die een instelling naast de echte cijfers zet: `. ./ijken.sh; run start=0.73 aha=0.1 rand=1.5` |
 | `gangbaarheid.py` | Schat hoe gangbaar elk 12-letterwoord is (ondertitelfrequentie, samenstellingen via hun delen) → `resultaten/gangbaarheid.json` (percentiel 0–1). |
-| `anagramfit.py` | Zet de anagramtest naast de voorspelling van het model: `python3 anagramfit.py test=a start=0.73 aha=0.1 rand=1.5` |
-| `anagramtest_inlezen.py` | Zet de tekst van de knop *Kopieer resultaten* (test B) om naar `resultaten/anagramtest_b_resultaten.json`. |
-| `resultaten/` | Gangbaarheid, de opgaven van anagramtest A en B, en de resultaten van test A. |
+| `anagramfit.py` | Zet een anagramtest naast de voorspelling van het model: `python3 anagramfit.py test=b speler=speler2 start=0.73 aha=0.1 rand=1.5` |
+| `anagramtest_inlezen.py` | Zet de tekst van de knop *Kopieer resultaten* om naar `resultaten/anagramtest_<test>_<speler>.json`: `python3 anagramtest_inlezen.py b speler2 "ANAGRAMTEST-B …"` |
+| `resultaten/` | Gangbaarheid, de opgaven van anagramtest A en B, en de resultaten per speler (`anagramtest_a_speler1`, `anagramtest_b_speler1`, `anagramtest_b_speler2`). |
 
 ## Het model
 
@@ -43,7 +43,23 @@ Correlatie met de echte telling per ronde: ongeveer 0,5.
 Koopvolgordes (gekochte letters, echte borden): willekeurig 5,6 · schema 5,2 · medeklinker eerst 5,3 · hybride 5,2 · achteraf beste 3,9.
 Bij 3+ fouten: schema 6,9, hybride 5,9, medeklinker eerst 5,8.
 
-Anagramtest A (32 woorden, 90 s): opgelost met 0/2/4/6 letters op hun plek: 0/8, 4/8, 4/8, 8/8. Het model voorspelt 0%, 47%, 87%, 86%.
+## Anagramtests (26–27 oktober 2026)
+
+32 samengestelde woorden per test, 90 s per woord, 0/2/4/6 letters al op hun plek (8 woorden elk).
+
+| | 0 | 2 | 4 | 6 | Totaal | Binnen 30 s |
+|---|---|---|---|---|---|---|
+| Speler 1, test A | 0/8 | 4/8 | 4/8 | 8/8 | 16 | 14 |
+| Speler 1, test B | 0/8 | 2/8 | 5/8 | 8/8 | 15 | 12 |
+| Speler 2, test B | 1/8 | 0/8 | 4/8 | 5/8 | 10 | 4 |
+| Model (start 0,73), test A | 0% | 44% | 88% | 83% | 17 | |
+| Model (start 0,73), test B | 0% | 27% | 80% | 86% | 16 | |
+
+- Op dezelfde woorden (test B): allebei 8, alleen speler 1 7, alleen speler 2 2. Bij 6 van de 8 gedeelde woorden was speler 1 sneller, vaak twee tot drie keer.
+- Speler 1 geeft gemiddeld na ~25 s op; speler 2 gebruikt meestal de volle 90 s en probeert vaker een fout woord.
+- Per speler geijkt: speler 1 ≈ `start=0.70`, speler 2 ≈ `start=0.57`. Met die waarden koopt het team in het model gemiddeld 5,5 respectievelijk 6,3 letters (`strategie=hybride`).
+- Gangbaarheid maakte voor beiden nauwelijks uit: het knelpunt is het anagram, niet de woordenschat.
+- Speler 1 had de woorden van test B heel kort gezien voordat hij hem maakte.
 
 ## Kanttekeningen
 
