@@ -45,6 +45,17 @@ Let op: met een gratis account is een Pages-site openbaar (de link is niet gehei
 
 Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de lijsten. Heb je de spreadsheet aangepast, kies hem dan op de pagina bij "Aangepaste spreadsheet?". Online (GitHub Pages) leest de pagina altijd zelf de nieuwste `stamlijsten.xlsx`.
 
+## Aflevering spelen
+
+Een complete ronde zoals in de uitzending: 12 vragen (waarvan één paardensprong of taartpuzzel), waarvan de beginletters samen een nieuw 12-letterwoord vormen.
+Onderwerpen en moeilijkheid volgen de verdeling uit de 87 teamrondes van S25–S26 (veel geschiedenis en natuur, één muziekvraag, één puzzel).
+
+1. **Antwoordfase** – typ het antwoord (vink *twijfel* aan als je het niet zeker weet) of kies **Die zoeken we op**. Je ziet niet of een antwoord goed is. De klok telt alleen op.
+2. **Opzoekstraat** – daarna zoek je de bewaarde vragen één voor één op. Pas hier zie je in welke boeken het antwoord staat. Per vraag wordt de tijd bijgehouden; opzoeken kost €1 per 2 seconden.
+3. **12-letterwoord** – begint vanzelf, met 2 minuten. Tik een letter aan om hem te kopen (€10).
+
+Na afloop zie je de eindscore (€500 − opzoeken − letters + €10 per goed antwoord uit je hoofd + bonus), de tijden en per vraag het juiste antwoord. Rekent de computer een goed antwoord fout (andere spelling), tik dan op de regel.
+
 ## Puzzels oefenen
 
 Op het beginscherm staan vier oefenspellen:
