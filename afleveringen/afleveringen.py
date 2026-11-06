@@ -56,18 +56,18 @@ AFL.append(dict(w='FIETSENMAKER', qs=[
     Q('Geschiedenis', 3,
       'In 1494 sloten Spanje en Portugal een verdrag waarin ze de nieuw ontdekte wereld onder elkaar verdeelden langs een lijn van pool tot pool, zo\'n 370 leguas (ruim 2.000 kilometer) ten westen van de Kaapverdische Eilanden. Daardoor kwam Brazilië later aan Portugal. Naar welke Spaanse plaats is dit verdrag genoemd?',
       'Tordesillas', ['verdrag van tordesillas'],
-      b=[KM, WP], z='Kroniek van de Mensheid op 1494, of Winkler Prins op Kaapverdische Eilanden / Brazilië (geschiedenis)',
+      b=[KM, WP], z='Kroniek van de Mensheid op 1494, of Winkler Prins op Kaapverdische Eilanden of Brazilië',
       x='Het verdrag werd op 7 juni 1494 getekend; de paus had al eerder een lijn getrokken.'),
     PS('NACHTUIL', 'Een nachtuil is een nachtvlinder uit een grote familie (Noctuidae).'),
     Q('Geografie', 2,
       'Welke hoofdstad aan de Golf van Guinee was vroeger het bestuurscentrum van de Britse kolonie Goudkust? Het land werd in 1957 als een van de eerste Afrikaanse kolonies onafhankelijk.',
       'Accra', ['akkra'],
-      b=[BOS, WP], z='Bosatlas: kaart West-Afrika, of Winkler Prins op Goudkust',
+      b=[BOS, WP], z='Bosatlas op Golf van Guinee, of Winkler Prins op Goudkust',
       x='De Goudkust werd Ghana, onder leiding van Kwame Nkrumah.'),
     Q('Wetenschap', 3,
       'Welk zeldzaam, keihard en uiterst corrosiebestendig metaal heeft atoomnummer 77? Het werd in 1803 ontdekt door Smithson Tennant en is genoemd naar de Griekse godin van de regenboog, omdat de zouten ervan zoveel verschillende kleuren hebben.',
       'Iridium',
-      b=[WP, POP], z='Winkler Prins op regenboog / Iris (mythologie), of het periodiek systeem op nummer 77',
+      b=[WP, POP], z='Winkler Prins op regenboog, of de elementen op atoomnummer 77',
       x='Een iridiumlaag in gesteente van 66 miljoen jaar oud wees op de meteorietinslag die de dinosauriërs uitroeide.'),
     Q('Medisch', 2,
       'Het onderbeen heeft twee pijpbeenderen: het scheenbeen, in het Latijn tibia, en het dunnere kuitbeen aan de buitenkant. Wat is de Latijnse naam van het kuitbeen?',
@@ -77,7 +77,7 @@ AFL.append(dict(w='FIETSENMAKER', qs=[
     Q('Kunst', 1,
       'Welke Nederlandse graficus, in 1898 geboren in Leeuwarden, maakte onmogelijke bouwwerken zoals "Klimmen en dalen", waarop monniken eindeloos een trap op lopen, en de litho met twee handen die elkaar tekenen?',
       'Escher', ['m.c. escher', 'mc escher', 'maurits escher'], p=True,
-      b=[WP], z='Winkler Prins: geboren 1898 Leeuwarden is lastig; zoek op grafiek / Leeuwarden (bekende inwoners)',
+      b=[WP], z='Winkler Prins op Leeuwarden of op Klimmen en dalen',
       x='Maurits Cornelis Escher (1898-1972). In Den Haag staat Escher in Het Paleis.'),
     Q('Sport', 1,
       'Welke racketsport wordt gespeeld in een gesloten zaal, waarbij twee spelers om beurten een kleine, nauwelijks stuiterende bal tegen de voorwand slaan en ook de zijwanden en achterwand gebruikt mogen worden?',
@@ -87,7 +87,7 @@ AFL.append(dict(w='FIETSENMAKER', qs=[
     Q('Film', 1,
       'Welke Amerikaanse regisseur maakte "2001: A Space Odyssey", "A Clockwork Orange", "The Shining" met Jack Nicholson, en de oorlogsfilm "Full Metal Jacket"?',
       'Kubrick', ['stanley kubrick'], p=True,
-      b=[SFE, FJB], z='Speelfilmencyclopedie op de titel The Shining (zoeken kan alleen op titel)',
+      b=[SFE, FJB], z='Speelfilmencyclopedie op The Shining of Full Metal Jacket (zoeken kan alleen op titel)',
       x='Stanley Kubrick (1928-1999).'),
     Q('Geschiedenis', 2,
       'Welke Franse revolutionair, bijgenaamd "l\'Incorruptible" (de onkreukbare), leidde tijdens het Schrikbewind het Comité van Openbaar Welzijn en werd in juli 1794 zelf onder de guillotine gebracht?',
@@ -137,7 +137,7 @@ AFL.append(dict(w='TUINKABOUTER', qs=[
     Q('Kunst', 2,
       'Welke Zuid-Nederlandse schilder uit de zestiende eeuw maakte "De boerenbruiloft", "De jagers in de sneeuw" en "De toren van Babel", die in Museum Boijmans Van Beuningen hangt in een kleinere versie?',
       'Bruegel', ['brueghel', 'breughel', 'pieter bruegel', 'pieter brueghel'], p=True,
-      b=[WP], z='Winkler Prins op Toren van Babel (kunst) of Jagers in de sneeuw',
+      b=[WP], z='Winkler Prins op Toren van Babel of Jagers in de sneeuw',
       x='Pieter Bruegel de Oude (ca. 1525-1569).'),
     Q('Wetenschap', 2,
       'Welke planeet werd in 1781 ontdekt door William Herschel, als eerste planeet die met een telescoop werd gevonden? Hij draait bijna op zijn kant, met de as in het vlak van zijn baan.',
@@ -147,7 +147,7 @@ AFL.append(dict(w='TUINKABOUTER', qs=[
     Q('Wetenschap', 2,
       'Welke Griekse wiskundige uit Alexandrië schreef rond 300 voor Christus "De Elementen", tweeduizend jaar lang hét leerboek meetkunde, met onder meer het bewijs dat er oneindig veel priemgetallen zijn?',
       'Euclides', ['euclid', 'eukleides'], p=True,
-      b=[POP, WP], z='Het Wiskundeboek (op jaartal, rond 300 v.Chr.)',
+      b=[POP, WP], z='Het Wiskundeboek (op jaartal) rond 300 voor Christus, of Winkler Prins op Alexandrië',
       x='Naar hem heet de euclidische meetkunde.'),
     Q('Literatuur', 2,
       'Welke schrijver debuteerde in 1947 met "De avonden", over tien decemberavonden van de kantoorklerk Frits van Egters, en is samen met Hermans en Mulisch een van de Grote Drie?',
@@ -176,7 +176,7 @@ AFL.append(dict(w='SCHOENENKAST', qs=[
     Q('Muziek', 2,
       'Welke Engelse componist schreef de "Enigma-variaties" en de marsen "Pomp and Circumstance", waarvan er één met de tekst "Land of Hope and Glory" elk jaar op de Last Night of the Proms wordt gezongen?',
       'Elgar', ['edward elgar'], p=True,
-      b=[KKM, WP], z='Winkler Prins op Pomp and Circumstance, of de Kroniek van de klassieke muziek rond 1899-1901',
+      b=[KKM, WP], z='Winkler Prins op Pomp and Circumstance of Enigma-variaties',
       x='Sir Edward Elgar (1857-1934). Zijn portret stond op het Britse biljet van 20 pond.'),
     Q('Geschiedenis', 3,
       'In 1672, het Rampjaar, vielen Frankrijk, Engeland en twee Duitse bisdommen de Republiek aan. In welke Gelderse stad werd in 1678 de vrede gesloten die de oorlog met Frankrijk beëindigde?',
@@ -187,13 +187,13 @@ AFL.append(dict(w='SCHOENENKAST', qs=[
     Q('Wetenschap', 1,
       'Welk edelgas met atoomnummer 10 geeft in een gasontladingsbuis een feloranjerood licht, en is daarom de naamgever van reclameverlichting?',
       'Neon',
-      b=[WP, POP], z='Winkler Prins op edelgassen, of het periodiek systeem op nummer 10',
+      b=[WP, POP], z='Winkler Prins op edelgas, of de elementen op atoomnummer 10',
       x='Ontdekt in 1898 door Ramsay en Travers; de naam komt van het Griekse neos, nieuw.'),
     Q('Medisch', 2,
-      'Welke besmettelijke kinderziekte, veroorzaakt door een bacterie van het geslacht Bordetella, geeft wekenlang hevige aanvallen met een gierende, piepende inademing en is voor zuigelingen levensgevaarlijk? Baby\'s worden ertegen ingeënt, en zwangeren krijgen er tegenwoordig ook een prik tegen.',
-      'Kinkhoest', ['pertussis'],
-      b=[MED], z='Medische Encyclopedie op Bordetella of op Rijksvaccinatieprogramma / inenting',
-      x='Officieel pertussis; in China heet het de honderddagenhoest.'),
+      'Welke besmettelijke kinderziekte, veroorzaakt door de bacterie Bordetella pertussis, geeft wekenlang hevige aanvallen met een gierende, piepende inademing en is voor zuigelingen levensgevaarlijk? Baby\'s worden ertegen ingeënt, en zwangeren krijgen er tegenwoordig ook een prik tegen.',
+      'Kinkhoest',
+      b=[MED], z='Medische Encyclopedie op Bordetella pertussis',
+      x='In China heet het de honderddagenhoest.'),
     Q('Literatuur', 1,
       'Welke Deense schrijver uit Odense schreef sprookjes als "Het lelijke jonge eendje", "De kleine zeemeermin" en "De nieuwe kleren van de keizer"?',
       'Andersen', ['hans christian andersen', 'h.c. andersen', 'hc andersen'], p=True,
@@ -212,7 +212,7 @@ AFL.append(dict(w='SCHOENENKAST', qs=[
     Q('Taal', 3,
       'Hoe heet de stijlfiguur waarin twee woorden van dezelfde woordsoort met (bijna) dezelfde betekenis naast elkaar staan, zoals in "oud en bejaard", "vrede en rust" of "nooit en te nimmer"? Het is iets anders dan een pleonasme zoals "een witte schimmel".',
       'Tautologie', ['tautologieen'],
-      b=[VD], z='Van Dale op pleonasme (verwijst naar de verwante term)',
+      b=[VD], z='Van Dale op pleonasme',
       x='Bij een pleonasme herhaalt een bijvoeglijk naamwoord een eigenschap die al in het zelfstandig naamwoord zit.'),
 ]))
 
@@ -231,7 +231,7 @@ AFL.append(dict(w='BOSWANDELING', qs=[
     Q('Muziek', 1,
       'Welke componist, geboren in Bonn, was al grotendeels doof toen hij zijn Negende symfonie schreef, met in het slotdeel het koor "Ode an die Freude", dat nu het Europese volkslied is?',
       'Beethoven', ['ludwig van beethoven'], p=True,
-      b=[KKM, WP], z='Kroniek van de klassieke muziek op 1824 (première in Wenen)',
+      b=[KKM, WP], z='Winkler Prins op Ode an die Freude of op Bonn',
       x='Ludwig van Beethoven (1770-1827).'),
     Q('Geschiedenis', 2,
       'Welke landsadvocaat van Holland, jarenlang de machtigste politicus van de Republiek, kwam in conflict met prins Maurits over het Twaalfjarig Bestand en de godsdiensttwisten, en werd in mei 1619 op het Binnenhof onthoofd?',
@@ -267,12 +267,12 @@ AFL.append(dict(w='BOSWANDELING', qs=[
     Q('Wetenschap', 2,
       'Hoe noem je atomen van hetzelfde scheikundige element die een verschillend aantal neutronen in hun kern hebben, zoals koolstof-12 en het radioactieve koolstof-14, dat gebruikt wordt om de ouderdom van fossielen te bepalen?',
       'Isotoop', ['isotopen'],
-      b=[WP, POP], z='Winkler Prins op koolstofdatering / C14-methode',
+      b=[WP, POP], z='Winkler Prins op koolstof-14',
       x='Isotoop betekent "op dezelfde plaats": in het periodiek systeem.'),
     Q('Film', 1,
       'Welke Britse regisseur maakte "Inception", "Interstellar", de Batman-trilogie "The Dark Knight" en "Oppenheimer", waarvoor hij in 2024 de Oscar voor beste regie kreeg?',
       'Nolan', ['christopher nolan'], p=True,
-      b=[FJB, SFE], z='Filmjaarboek: regisseursoverzicht achterin, of Speelfilmencyclopedie op Inception',
+      b=[FJB, SFE], z='Speelfilmencyclopedie of Filmjaarboek op Inception of Oppenheimer (zoeken op titel)',
       x='Christopher Nolan (1970).'),
 ]))
 
@@ -296,7 +296,7 @@ AFL.append(dict(w='TREINKAARTJE', qs=[
     Q('Wetenschap', 1,
       'Welke Griekse geleerde uit Syracuse zou "Eureka!" hebben geroepen toen hij in bad ontdekte hoe hij het volume van een kroon kon meten? De wet van de opwaartse kracht is naar hem genoemd.',
       'Archimedes', p=True,
-      b=[POP, WP], z='Het Natuurkundeboek, rond 250 v.Chr.',
+      b=[POP, WP], z='Winkler Prins op opwaartse kracht of op Syracuse',
       x='Archimedes kwam in 212 v.Chr. om toen de Romeinen Syracuse innamen.'),
     Q('Geografie', 1,
       'Welk land, met Teheran als hoofdstad, heette tot 1935 internationaal Perzië?',
@@ -346,12 +346,12 @@ REPL = {
  (0, 'Fibula'): ACT('Op 14 januari 2024 deed koningin Margrethe II van Denemarken na 52 jaar troonsafstand. Onder welke naam besteeg haar zoon de troon als de tiende met die naam?',
       'Frederik', ['frederik x', 'frederik de tiende', 'frederick'], p=False, d=1, z='Het Aanzien van 2024 of het jaarboek op 14 januari', x='Koning Frederik X; zijn vrouw is de Australische Mary Donaldson.'),
  (0, 'Squash'): ACT('Welke voormalige topambtenaar, eerder onder meer directeur van de AIVD en Nationaal Coördinator Terrorismebestrijding, werd in juli 2024 als partijloze minister-president beëdigd van het kabinet van PVV, VVD, NSC en BBB?',
-      'Schoof', ['dick schoof'], d=1, z='Het Aanzien van 2024 op 2 juli', x='Dick Schoof; het kabinet viel in juni 2025 toen de PVV eruit stapte.'),
+      'Schoof', ['dick schoof'], d=1, z='Het Aanzien van 2024 (juli), of Winkler Prins op AIVD', x='Dick Schoof; het kabinet viel in juni 2025 toen de PVV eruit stapte.'),
  # aflevering 2
  (1, 'Thorbecke'): ACT('Welke Britse premier hield het in het najaar van 2022 maar 49 dagen vol, na een "minibegroting" met ongedekte belastingverlagingen die de pond deed kelderen? Een tabloid liet via een livestream zien dat een krop sla het langer volhield.',
-      'Truss', ['liz truss', 'elizabeth truss'], d=2, z='Het Aanzien van 2022 (oktober) of de laptop', x='Liz Truss werd opgevolgd door Rishi Sunak.'),
+      'Truss', ['liz truss', 'elizabeth truss'], d=2, z='Het Aanzien van 2022 (najaar), of de laptop op minibegroting', x='Liz Truss werd opgevolgd door Rishi Sunak.'),
  (1, 'Aalscholver'): ACT('Welke Labor-politicus is sinds mei 2022 premier van Australië en werd in mei 2025 met een ruime meerderheid herkozen?',
-      'Albanese', ['anthony albanese'], d=3, z='Laptop: lijst van premiers van Australië', x='Anthony Albanese volgde Scott Morrison op.'),
+      'Albanese', ['anthony albanese'], d=3, z='Laptop op premier van Australië', x='Anthony Albanese volgde Scott Morrison op.'),
  # aflevering 3
  (2, 'Caesar'): ACT('Welke Britse koning werd op 6 mei 2023 in Westminster Abbey gekroond, ruim acht maanden nadat hij zijn moeder was opgevolgd?',
       'Charles', ['charles iii', 'karel', 'karel iii', 'koning charles'], p=False, d=1, z='Het Aanzien van 2023 op 6 mei', x='Charles III; zijn vrouw Camilla werd tegelijk tot koningin gekroond.'),
@@ -366,7 +366,7 @@ REPL = {
  (4, 'Rugby'): ACT('Welke langstzittende premier van Nederland, van 2010 tot 2024, werd op 1 oktober 2024 secretaris-generaal van de NAVO?',
       'Rutte', ['mark rutte'], d=1, z='Het Aanzien van 2024 op 1 oktober', x='Mark Rutte volgde de Noor Jens Stoltenberg op.'),
  (4, 'Tarantino'): ACT('Welke politica van de Liberaal-Democratische Partij werd in oktober 2025 de eerste vrouwelijke premier van Japan? Ze geldt als politiek erfgenaam van de vermoorde oud-premier Shinzo Abe.',
-      'Takaichi', ['sanae takaichi'], d=3, z='Het Aanzien van 2025 (oktober) of de laptop', x='Sanae Takaichi, ooit drummer in een heavymetalband.'),
+      'Takaichi', ['sanae takaichi'], d=3, z='Het Aanzien van 2025 (oktober), of de laptop op premier van Japan', x='Sanae Takaichi, ooit drummer in een heavymetalband.'),
 }
 for (i, a), new in REPL.items():
     j = next(j for j, q in enumerate(AFL[i]['qs']) if q['a'] == a)
@@ -408,6 +408,14 @@ def leaks(E):
                         out.append((q['a'], j + 1, sub))
     return out
 
+# De zoektip mag alleen zoekwoorden bevatten die ook in de vraag staan (naast boeknamen en verbindingswoorden).
+BOEKWOORDEN = set(_n(' '.join([WP, VD, BOS, KM, KN, K20, VOG, FLORA, NAT, MED, STZ, KKM, HIT, SFE, FJB, U1001, POP, LAPTOP, AANZ, JB,
+    'Kroniek Aanzien Medische Encyclopedie Steinz Heukels Speelfilmencyclopedie Filmjaarboek Wiskundeboek Natuurkundeboek Astronomieboek vogelgids natuurgids jaarboek laptop'])).split())
+TIPWOORDEN = set('op of de het een van en in register achterin kaart zoeken kan alleen titel jaartal rond elementen atoomnummer najaar dan rivier volgen'.split())
+def tip_buiten_vraag(q):
+    vraag = _n(q['q'])
+    return [w for w in _n(q.get('z') or '').split() if len(w) > 1 and w not in BOEKWOORDEN and w not in TIPWOORDEN and w[:5] not in vraag]
+
 ok = True
 for i, A in enumerate(AFL, 1):
     assert len(A['qs']) == 12, (i, len(A['qs']))
@@ -418,6 +426,9 @@ for i, A in enumerate(AFL, 1):
         q['L'] = letter(q)
     for l in leaks(A):
         print('ANTWOORD IN VRAAG', i, l); ok = False
+    for q in A['qs']:
+        w = tip_buiten_vraag(q)
+        if w: print('ZOEKTIP MET ANDERE WOORDEN', i, q['a'], w); ok = False
     from collections import Counter
     print(i, A['w'], Counter(q['d'] for q in A['qs']), Counter(q['c'] for q in A['qs']))
 if not ok: sys.exit(1)
