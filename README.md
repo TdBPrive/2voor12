@@ -51,7 +51,7 @@ Een complete ronde zoals in de uitzending: 12 vragen (waarvan één paardenspron
 Onderwerpen en moeilijkheid volgen de verdeling uit de 87 teamrondes van S25–S26 (veel geschiedenis en natuur, actualiteit van de laatste vijf jaar, één puzzel, en vraag 12 is altijd een muziekvraag). Bij namen telt alleen de achternaam.
 
 1. **Antwoordfase** – typ het antwoord (vink *twijfel* aan als je het niet zeker weet) of kies **Die zoeken we op**. Je ziet niet of een antwoord goed is. De klok telt alleen op.
-2. **Opzoekstraat** – daarna komen de bewaarde vragen één voor één terug. Pas hier zie je in welke boeken het antwoord staat. Vraag herlezen en het boek pakken is gratis: de klok loopt alleen tussen **Start** en **Stop** (er klinkt een bel bij Stop). Opzoeken kost €1 per 2 seconden. Ook een puzzel kun je bewaren, maar daar loopt de klok meteen.
+2. **Opzoekstraat** – daarna komen de bewaarde vragen één voor één terug. Pas hier zie je in welke boeken het antwoord staat. Vraag herlezen en het boek pakken is gratis: de klok loopt alleen tussen **Start** en **Stop** (er klinkt een bel bij Stop). Opzoeken kost €1 per 2 seconden. Een puzzel heeft in de antwoordfase 30 seconden; lukt het niet, dan gaat hij vanzelf naar de opzoekstraat. Daar loopt de klok meteen.
 3. **12-letterwoord** – begint vanzelf, met 2 minuten. Tik een letter aan om hem te kopen (€10).
 
 Na afloop zie je de eindscore (€500 − opzoeken − letters + €10 per goed antwoord uit je hoofd + bonus), de tijden en per vraag het juiste antwoord. Rekent de computer een goed antwoord fout (andere spelling), tik dan op de regel.

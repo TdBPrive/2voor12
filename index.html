@@ -181,6 +181,7 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .astart{width:100%;max-width:440px;padding:14px;font-weight:700;font-size:18px;background:var(--good);border-color:var(--good);color:#fff}
 .astart.on{background:var(--bad);border-color:var(--bad)}
 .tag.run{background:var(--good);color:#fff}
+.tag.run.low{background:var(--bad)}
 .atab tr[class]{cursor:pointer}.atab tr.ok td:nth-child(5){color:var(--good);font-weight:700}.atab tr.no td:nth-child(5){color:var(--bad);font-weight:700}
 </style>
 </head>
@@ -1024,17 +1025,34 @@ function judge(q, inp){
   const ok = isRight(q, inp);
   return {ok, L: ok ? q.L : letterOf(q, inp)};
 }
+const PUZ_TIME = 30;   // seconden voor de puzzel in de antwoordfase
 let AC = null;
+// Tingeling: een snelle reeks slagjes van een klepel tegen twee metalen klokjes (zoals een fiets- of balie-bel).
 function bell(){
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-    const t = AC.currentTime;
-    [[1320, .35], [2640, .12], [3960, .06], [1650, .1]].forEach(([f, g]) => {
-      const o = AC.createOscillator(), v = AC.createGain();
-      o.type = 'sine'; o.frequency.value = f;
-      v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(g, t + .005); v.gain.exponentialRampToValueAtTime(.0001, t + 1.6);
-      o.connect(v).connect(AC.destination); o.start(t); o.stop(t + 1.7);
-    });
+    if (AC.state === 'suspended') AC.resume();
+    const t0 = AC.currentTime + .02, out = AC.createDynamicsCompressor(), master = AC.createGain();
+    master.gain.value = .8; master.connect(out); out.connect(AC.destination);
+    const PART = [[1, 1], [2.76, .45], [5.40, .22], [8.93, .1]];      // niet-harmonische boventonen van een klok
+    const N = 11;
+    for (let i = 0; i < N; i++) {
+      const t = t0 + i * .058 + (Math.random() - .5) * .012;
+      const base = i % 2 ? 2380 : 2310, last = i === N - 1, vol = (last ? .9 : .55 + Math.random() * .3);
+      PART.forEach(([r, g]) => {
+        const o = AC.createOscillator(), v = AC.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(base * r, t); o.detune.value = (Math.random() - .5) * 12;
+        const dec = (last ? 1.4 : .32) / Math.sqrt(r);
+        v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(g * vol * .25, t + .002); v.gain.exponentialRampToValueAtTime(.0001, t + dec);
+        o.connect(v).connect(master); o.start(t); o.stop(t + dec + .05);
+      });
+      // tikje van de klepel
+      const nb = AC.createBuffer(1, Math.floor(AC.sampleRate * .006), AC.sampleRate), d = nb.getChannelData(0);
+      for (let j = 0; j < d.length; j++) d[j] = (Math.random() * 2 - 1) * (1 - j / d.length);
+      const ns = AC.createBufferSource(), nv = AC.createGain(), hp = AC.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 3000; nv.gain.value = .08 * vol;
+      ns.buffer = nb; ns.connect(hp).connect(nv).connect(master); ns.start(t);
+    }
   } catch(e){}
 }
 function aflOptions(){
@@ -1092,7 +1110,7 @@ function aflDraw(){
     b.innerHTML = `<div class="gtitle">Aflevering spelen</div>
       <div class="ahelp"><p>Een complete ronde zoals in de uitzending: <b>12 vragen</b> (één daarvan een puzzel), en de beginletters vormen samen een <b>woord van 12 letters</b>.</p>
       <ol><li><b>Antwoordfase.</b> Typ je antwoord. Twijfel je, vink dan <i>twijfel</i> aan. Weet je het niet, kies <b>Die zoeken we op</b>: de vraag gaat naar de opzoekstraat. Je ziet niet of een antwoord goed is.</li>
-      <li><b>Opzoekstraat.</b> Na vraag 12 komen de bewaarde vragen één voor één terug. Pas dan zie je in welke boeken het antwoord staat. Vraag herlezen en het boek pakken is gratis; de klok loopt alleen tussen <b>Start</b> en <b>Stop</b> (met bel). Opzoeken kost €1 per 2 seconden. Een puzzel kun je ook bewaren, maar daar loopt de klok meteen.</li>
+      <li><b>Opzoekstraat.</b> Na vraag 12 komen de bewaarde vragen één voor één terug. Pas dan zie je in welke boeken het antwoord staat. Vraag herlezen en het boek pakken is gratis; de klok loopt alleen tussen <b>Start</b> en <b>Stop</b> (met bel). Opzoeken kost €1 per 2 seconden. Een puzzel heeft in de antwoordfase 30 seconden; lukt het niet, dan gaat hij vanzelf naar de opzoekstraat, en daar loopt de klok meteen.</li>
       <li><b>12-letterwoord.</b> Daarna begint vanzelf de finale: 2 minuten. Een letter kopen kost €10.</li></ol>
       <p class="muted">Er is geen tijdslimiet voor de vragen: de klok telt alleen op, zodat je achteraf ziet hoe lang je erover deed. Score: €500 − opzoekkosten − gekochte letters + €10 per goed antwoord uit je hoofd + bonus (0 fout €100, 1 €75, 2 €50, 3 €25). Woord niet geraden = €0.</p></div>
       <div class="row"><label>Kies <select id="aSel2">${$('aSel').innerHTML}</select></label><button class="primary" id="aGo">Start de aflevering</button></div>
@@ -1105,7 +1123,7 @@ function aflDraw(){
   if (A.phase === 'q') {
     const q = E.qs[A.k], puz = !!q.type;
     $('aPhase').textContent = `Vraag ${A.k + 1} van 12`;
-    b.innerHTML = aflMonitor(A.k) + `<div class="aq"><div class="qrow"><div class="q long" id="aQ">${esc(q.q)}</div><button class="speak" id="aSpeak" title="Voorlezen" aria-label="Voorlezen">🔊</button></div>
+    b.innerHTML = aflMonitor(A.k) + `<div class="aq">${puz ? `<div class="tags"><span class="tag run" id="aPuzClock">0:${PUZ_TIME}</span><span class="tag">Na ${PUZ_TIME} seconden gaat de puzzel vanzelf naar de opzoekstraat</span></div>` : ''}<div class="qrow"><div class="q long" id="aQ">${esc(q.q)}</div><button class="speak" id="aSpeak" title="Voorlezen" aria-label="Voorlezen">🔊</button></div>
       ${puz ? `<div class="aboard">${aflBoard(q)}</div>` : ''}
       <div class="gin"><input id="aIn" autocomplete="off" spellcheck="false" placeholder="${puz ? (q.type === 'tp' ? 'ontbrekende letter of het woord' : 'het woord') : 'antwoord'}"><button class="primary" id="aOk">Antwoord</button></div>
       <div class="abtns"><label class="tw"><input type="checkbox" id="aUns"> twijfel</label>
@@ -1113,7 +1131,8 @@ function aflDraw(){
       <div class="gmsg" id="aMsg"></div></div>`;
     $('aSpeak').onclick = () => speak(q.q);
     if ($('aSpeakAuto').checked) speak(q.q);
-    const next = () => { A.k++; if (A.k >= 12) aflEndQ(); else aflDraw(); };
+    const next = () => { A.pt0 = null; A.k++; if (A.k >= 12) aflEndQ(); else aflDraw(); };
+    A.next = next; A.pt0 = puz ? Date.now() : null;
     $('aOk').onclick = () => {
       const v = $('aIn').value.trim(); if (!v) { $('aMsg').textContent = 'Typ een antwoord, of kies hieronder.'; $('aMsg').className = 'gmsg no'; return; }
       const j = judge(q, v); A.ans[A.k] = {txt: v, L: j.L, ok: j.ok, unsure: $('aUns').checked}; next();
@@ -1238,7 +1257,14 @@ function aflEnd(won){
 setInterval(() => {
   if (!A || $('aflView').classList.contains('hidden')) return;
   const c = $('aClock'), el = (Date.now() - A.t0) / 1000;
-  if (A.phase === 'q') { c.textContent = fmt(el); c.className = 'count calm'; $('aSub').textContent = 'antwoordfase'; }
+  if (A.phase === 'q') {
+    c.textContent = fmt(el); c.className = 'count calm'; $('aSub').textContent = 'antwoordfase';
+    if (A.pt0) {
+      const left = Math.max(0, PUZ_TIME - (Date.now() - A.pt0) / 1000), pc = $('aPuzClock');
+      if (pc) { pc.textContent = fmt(Math.ceil(left)); pc.classList.toggle('low', left <= 10); }
+      if (left <= 0) { A.ans[A.k] = {zoek: true, auto: true}; A.next(); }
+    }
+  }
   else if (A.phase === 'zoek') {
     const k = A.ans.findIndex(a => a.zoek && a.L === undefined), a = A.ans[k];
     c.textContent = fmt(el); c.className = 'count calm'; $('aSub').textContent = 'opzoekstraat';
