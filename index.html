@@ -178,6 +178,9 @@ kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:
 .atab td,.atab th{border-top:1px solid var(--line);padding:6px;vertical-align:top;text-align:left}
 #aflView .epres b{font-size:clamp(20px,6vw,28px);overflow-wrap:anywhere}
 @media (max-width:560px){#aflView .epres{grid-template-columns:1fr}}
+.astart{width:100%;max-width:440px;padding:14px;font-weight:700;font-size:18px;background:var(--good);border-color:var(--good);color:#fff}
+.astart.on{background:var(--bad);border-color:var(--bad)}
+.tag.run{background:var(--good);color:#fff}
 .atab tr[class]{cursor:pointer}.atab tr.ok td:nth-child(5){color:var(--good);font-weight:700}.atab tr.no td:nth-child(5){color:var(--bad);font-weight:700}
 </style>
 </head>
@@ -1021,6 +1024,19 @@ function judge(q, inp){
   const ok = isRight(q, inp);
   return {ok, L: ok ? q.L : letterOf(q, inp)};
 }
+let AC = null;
+function bell(){
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const t = AC.currentTime;
+    [[1320, .35], [2640, .12], [3960, .06], [1650, .1]].forEach(([f, g]) => {
+      const o = AC.createOscillator(), v = AC.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(g, t + .005); v.gain.exponentialRampToValueAtTime(.0001, t + 1.6);
+      o.connect(v).connect(AC.destination); o.start(t); o.stop(t + 1.7);
+    });
+  } catch(e){}
+}
 function aflOptions(){
   if (!AFL) AFL = JSON.parse(document.getElementById('aflData').textContent);
   const sel = $('aSel'), keep = store.get('aSel', 0);
@@ -1076,7 +1092,7 @@ function aflDraw(){
     b.innerHTML = `<div class="gtitle">Aflevering spelen</div>
       <div class="ahelp"><p>Een complete ronde zoals in de uitzending: <b>12 vragen</b> (één daarvan een puzzel), en de beginletters vormen samen een <b>woord van 12 letters</b>.</p>
       <ol><li><b>Antwoordfase.</b> Typ je antwoord. Twijfel je, vink dan <i>twijfel</i> aan. Weet je het niet, kies <b>Die zoeken we op</b>: de vraag gaat naar de opzoekstraat. Je ziet niet of een antwoord goed is.</li>
-      <li><b>Opzoekstraat.</b> Na vraag 12 zoek je de bewaarde vragen één voor één op. Pas dan zie je in welke boeken het antwoord staat. De klok telt per vraag mee; opzoeken kost €1 per 2 seconden.</li>
+      <li><b>Opzoekstraat.</b> Na vraag 12 komen de bewaarde vragen één voor één terug. Pas dan zie je in welke boeken het antwoord staat. Vraag herlezen en het boek pakken is gratis; de klok loopt alleen tussen <b>Start</b> en <b>Stop</b> (met bel). Opzoeken kost €1 per 2 seconden. Een puzzel kun je ook bewaren, maar daar loopt de klok meteen.</li>
       <li><b>12-letterwoord.</b> Daarna begint vanzelf de finale: 2 minuten. Een letter kopen kost €10.</li></ol>
       <p class="muted">Er is geen tijdslimiet voor de vragen: de klok telt alleen op, zodat je achteraf ziet hoe lang je erover deed. Score: €500 − opzoekkosten − gekochte letters + €10 per goed antwoord uit je hoofd + bonus (0 fout €100, 1 €75, 2 €50, 3 €25). Woord niet geraden = €0.</p></div>
       <div class="row"><label>Kies <select id="aSel2">${$('aSel').innerHTML}</select></label><button class="primary" id="aGo">Start de aflevering</button></div>
@@ -1093,7 +1109,7 @@ function aflDraw(){
       ${puz ? `<div class="aboard">${aflBoard(q)}</div>` : ''}
       <div class="gin"><input id="aIn" autocomplete="off" spellcheck="false" placeholder="${puz ? (q.type === 'tp' ? 'ontbrekende letter of het woord' : 'het woord') : 'antwoord'}"><button class="primary" id="aOk">Antwoord</button></div>
       <div class="abtns"><label class="tw"><input type="checkbox" id="aUns"> twijfel</label>
-      ${puz ? '<button id="aPass">Weet ik niet</button>' : '<button id="aZoek">🔍 Die zoeken we op</button>'}</div>
+      <button id="aZoek">🔍 Die zoeken we op</button></div>
       <div class="gmsg" id="aMsg"></div></div>`;
     $('aSpeak').onclick = () => speak(q.q);
     if ($('aSpeakAuto').checked) speak(q.q);
@@ -1103,34 +1119,41 @@ function aflDraw(){
       const j = judge(q, v); A.ans[A.k] = {txt: v, L: j.L, ok: j.ok, unsure: $('aUns').checked}; next();
     };
     $('aIn').onkeydown = e => { if (e.key === 'Enter') $('aOk').click(); };
-    if (puz) $('aPass').onclick = () => { A.ans[A.k] = {txt: '', L: '–', ok: false}; next(); };
-    else $('aZoek').onclick = () => { A.ans[A.k] = {zoek: true}; next(); };
+    $('aZoek').onclick = () => { A.ans[A.k] = {zoek: true}; next(); };
     setTimeout(() => $('aIn') && $('aIn').focus(), 0);
     return;
   }
   if (A.phase === 'zoek') {
     const open = A.ans.map((a, k) => k).filter(k => A.ans[k].zoek && A.ans[k].L === undefined);
-    const k = open[0], q = E.qs[k], a = A.ans[k];
-    if (a.t0 === undefined) a.t0 = Date.now();
+    const k = open[0], q = E.qs[k], a = A.ans[k], puz = !!q.type;
+    if (a.acc === undefined) { a.acc = 0; a.since = null; if (puz) a.since = Date.now(); }   // puzzel: klok loopt meteen
     const done = A.ans.filter(x => x.zoek).length - open.length, tot = A.ans.filter(x => x.zoek).length;
     $('aPhase').textContent = `Opzoekstraat ${done + 1} van ${tot}`;
+    const info = puz
+      ? '<div class="abooks"><b>Puzzel</b><div class="muted">Bij een puzzel is er geen gratis bedenktijd: de klok loopt meteen. Druk op Stop als je het hebt (of wilt overleggen).</div></div>'
+      : `<div class="abooks"><b>Te vinden in</b><ul>${q.b.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${q.z ? `<div class="muted">Zoek via: ${esc(q.z)}</div>` : ''}<div class="muted" style="margin-top:6px">Vraag herlezen en het boek pakken is gratis. Druk op <b>Start</b> als je het boek openslaat.</div></div>`;
     b.innerHTML = aflMonitor(k) + `<div class="aq"><div class="tags"><span class="tag">Vraag ${k + 1}</span><span class="tag" id="aQClock"></span></div>
       <div class="qrow"><div class="q long">${esc(q.q)}</div><button class="speak" id="aSpeak" title="Voorlezen" aria-label="Voorlezen">🔊</button></div>
-      <div class="abooks"><b>Te vinden in</b><ul>${q.b.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${q.z ? `<div class="muted">Zoek via: ${esc(q.z)}</div>` : ''}</div>
-      <div class="gin"><input id="aIn" autocomplete="off" spellcheck="false" placeholder="gevonden antwoord"><button class="primary" id="aOk">Gevonden</button></div>
+      ${puz ? `<div class="aboard">${aflBoard(q)}</div>` : ''}
+      ${info}
+      <button class="astart" id="aRun"></button>
+      <div class="gin"><input id="aIn" autocomplete="off" spellcheck="false" placeholder="${puz ? (q.type === 'tp' ? 'ontbrekende letter of het woord' : 'het woord') : 'gevonden antwoord'}"><button class="primary" id="aOk">Gevonden</button></div>
       <div class="abtns"><label class="tw"><input type="checkbox" id="aUns"> twijfel</label><button id="aPass">Niet gevonden</button></div>
       <div class="gmsg" id="aMsg"></div></div>`;
     $('aSpeak').onclick = () => speak(q.q);
+    const syncRun = () => { const r = $('aRun'), on = a.since !== null; r.textContent = on ? '■ Stop (bel)' : (a.acc ? '▶ Verder zoeken' : '▶ Start opzoeken'); r.classList.toggle('on', on); };
+    const stop = () => { if (a.since !== null) { a.acc += (Date.now() - a.since) / 1000; a.since = null; bell(); } };
+    $('aRun').onclick = () => { if (a.since !== null) stop(); else a.since = Date.now(); syncRun(); if (a.since === null) $('aIn').focus(); };
+    syncRun();
     const fin = (v, uns) => {
-      a.sec = (Date.now() - a.t0) / 1000;
+      stop(); a.sec = a.acc;
       if (v) { const j = judge(q, v); Object.assign(a, {txt: v, L: j.L, ok: j.ok, unsure: uns}); }
       else Object.assign(a, {txt: '', L: '–', ok: false});
-      if (open.length > 1) aflDraw(); else aflEndZ();
+      setTimeout(() => { if (open.length > 1) aflDraw(); else aflEndZ(); }, 0);
     };
     $('aOk').onclick = () => { const v = $('aIn').value.trim(); if (!v) { $('aMsg').textContent = 'Typ wat je gevonden hebt, of kies Niet gevonden.'; $('aMsg').className = 'gmsg no'; return; } fin(v, $('aUns').checked); };
     $('aIn').onkeydown = e => { if (e.key === 'Enter') $('aOk').click(); };
     $('aPass').onclick = () => fin('', false);
-    setTimeout(() => $('aIn') && $('aIn').focus(), 0);
     return;
   }
   if (A.phase === 'woord' || A.phase === 'eind') {
@@ -1180,7 +1203,7 @@ function aflDraw(){
     b.innerHTML = `<div class="aq">${top}${sol}
       <div class="epres"><div>Het woord<b>${A.T.join('')}</b><span class="${A.won ? 'yes' : 'nope'}">${A.won ? `Geraden in ${fmt(A.tW)}` : A.timeUp ? 'Tijd op' : 'Niet geraden'}</span></div>
       <div>Eindscore<b>€${S.total}</b><span class="muted">${A.won ? '' : 'woord niet geraden'}</span></div></div>
-      <table class="ascore"><tr><td>Start</td><td>€500</td></tr><tr><td>Opzoeken (${fmt(A.tZ)})</td><td>−€${S.zoek}</td></tr><tr><td>Letters gekocht (${A.used.length})</td><td>−€${S.letters}</td></tr>
+      <table class="ascore"><tr><td>Start</td><td>€500</td></tr><tr><td>Opzoeken (klok liep ${fmt(A.ans.reduce((t, x) => t + (x.sec || 0), 0))})</td><td>−€${S.zoek}</td></tr><tr><td>Letters gekocht (${A.used.length})</td><td>−€${S.letters}</td></tr>
         <tr><td>Parate kennis (${S.parate} goed zonder opzoeken)</td><td>+€${S.parate * 10}</td></tr><tr><td>Bonus (${S.fout} fout)</td><td>+€${S.bonus}</td></tr></table>
       <div class="gstat"><span>Antwoordfase: <b>${fmt(A.tQ)}</b></span><span>Opzoekstraat: <b>${fmt(A.tZ)}</b> (${A.ans.filter(a => a.zoek).length} vragen)</span><span>Goed: <b>${12 - S.fout}</b> van 12</span></div>
       <div class="atab"><table><tr><th>#</th><th>Onderwerp</th><th>Jullie antwoord</th><th>Juist</th><th></th><th>Gezocht</th></tr>${rows}</table></div>
@@ -1219,7 +1242,7 @@ setInterval(() => {
   else if (A.phase === 'zoek') {
     const k = A.ans.findIndex(a => a.zoek && a.L === undefined), a = A.ans[k];
     c.textContent = fmt(el); c.className = 'count calm'; $('aSub').textContent = 'opzoekstraat';
-    const qc = $('aQClock'); if (qc && a && a.t0) { const s = (Date.now() - a.t0) / 1000; qc.textContent = `deze vraag ${fmt(s)} · opzoekkosten €${Math.ceil((A.ans.reduce((t, x) => t + (x.sec || 0), 0) + s) / 2)}`; }
+    const qc = $('aQClock'); if (qc && a && a.acc !== undefined) { const s = a.acc + (a.since !== null ? (Date.now() - a.since) / 1000 : 0); qc.textContent = `${a.since !== null ? '⏱ loopt' : '⏸ stil'} · deze vraag ${fmt(s)} · opzoekkosten €${Math.ceil((A.ans.reduce((t, x) => t + (x.sec || 0), 0) + s) / 2)}`; qc.classList.toggle('run', a.since !== null); }
   } else if (A.phase === 'woord') {
     const left = Math.max(0, 120 - el), sec = Math.ceil(left);
     c.textContent = fmt(sec); $('aSub').textContent = 'finale';
