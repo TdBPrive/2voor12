@@ -128,7 +128,7 @@ AFL.append(dict(w='TUINKABOUTER', qs=[
       'Aalscholver', ['aalscholvers'],
       b=[VOG], z='Register achterin de vogelgids, op Phalacrocorax',
       x='In China en Japan worden aalscholvers van oudsher voor de visvangst gebruikt.'),
-    TP('TROMPETER', 2, 'Een trompetter is ook een vogel en een zwaan (trompetzwaan).'),
+    TP('WOLKBREUK', 1, 'Een wolkbreuk is een korte, zeer hevige regenbui.'),
     Q('Geschiedenis', 1,
       'Welke Romeinse keizer zou volgens de overlevering op zijn lier hebben gespeeld terwijl Rome in het jaar 64 brandde? Hij gaf de christenen de schuld en liet later een enorm paleis bouwen, het Gouden Huis.',
       'Nero', ['keizer nero'], p=True,
