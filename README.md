@@ -48,7 +48,7 @@ Dubbelklik je `index.html`, dan gebruikt de pagina een ingebouwde kopie van de l
 ## Aflevering spelen
 
 Een complete ronde zoals in de uitzending: 12 vragen (waarvan één paardensprong of taartpuzzel), waarvan de beginletters samen een nieuw 12-letterwoord vormen.
-Onderwerpen en moeilijkheid volgen de verdeling uit de 87 teamrondes van S25–S26 (veel geschiedenis en natuur, actualiteit van de laatste vijf jaar, één muziekvraag, één puzzel). Bij namen telt alleen de achternaam.
+Onderwerpen en moeilijkheid volgen de verdeling uit de 87 teamrondes van S25–S26 (veel geschiedenis en natuur, actualiteit van de laatste vijf jaar, één puzzel, en vraag 12 is altijd een muziekvraag). Bij namen telt alleen de achternaam.
 
 1. **Antwoordfase** – typ het antwoord (vink *twijfel* aan als je het niet zeker weet) of kies **Die zoeken we op**. Je ziet niet of een antwoord goed is. De klok telt alleen op.
 2. **Opzoekstraat** – daarna zoek je de bewaarde vragen één voor één op. Pas hier zie je in welke boeken het antwoord staat. Per vraag wordt de tijd bijgehouden; opzoeken kost €1 per 2 seconden.

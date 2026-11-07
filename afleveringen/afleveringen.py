@@ -372,6 +372,12 @@ for (i, a), new in REPL.items():
     j = next(j for j, q in enumerate(AFL[i]['qs']) if q['a'] == a)
     AFL[i]['qs'][j] = new
 
+# Vraag 12 is altijd de muziekvraag (zoals in de uitzending).
+for A in AFL:
+    m = [q for q in A['qs'] if q['c'] == 'Muziek']
+    assert len(m) == 1, A['w']
+    A['qs'] = [q for q in A['qs'] if q['c'] != 'Muziek'] + m
+
 
 def tiles(w):
     import re
