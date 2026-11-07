@@ -372,6 +372,33 @@ for (i, a), new in REPL.items():
     j = next(j for j, q in enumerate(AFL[i]['qs']) if q['a'] == a)
     AFL[i]['qs'][j] = new
 
+# Muziek: afwisseling tussen pop, Songfestival, Nederlandstalig en klassiek
+MUZ = {
+ (0, 'Mozart'): Q('Muziek', 1,
+      'Welke zanger, in 1946 als Farrokh Bulsara geboren op Zanzibar, schreef als frontman van Queen "Bohemian Rhapsody", het nummer dat in de Top 2000 vaker op nummer 1 stond dan welk ander nummer ook?',
+      'Mercury', ['freddie mercury'], p=True,
+      b=[HIT, LAPTOP], z='50 jaar Hitparade: register achterin op Bohemian Rhapsody',
+      x='Freddie Mercury (1946-1991).'),
+ (1, 'Tsjaikovski'): Q('Muziek', 2,
+      'Met welke groep, met zangeres Getty Kaspers, won Nederland in 1975 in Stockholm het Eurovisiesongfestival met het nummer "Ding-a-dong"?',
+      'Teach-In', ['teach in', 'teachin'],
+      b=[HIT, AANZ], z='50 jaar Hitparade: register achterin op Ding-a-dong, of Het Aanzien van 1975',
+      x='Daarna won Nederland pas in 2019 weer, met Duncan Laurence.'),
+ (3, 'Beethoven'): Q('Muziek', 1,
+      'Welke Zeeuwse band met zanger Paskal Jakobsen had in 2017 samen met de Vlaamse zangeres Geike Arnaert een grote hit met "Zoutelande"?',
+      'BLØF', ['blof', 'bløf'],
+      b=[HIT, LAPTOP], z='50 jaar Hitparade: register achterin op Zoutelande',
+      x='De band komt uit Vlissingen; eerdere hits zijn onder meer "Liefs uit Londen" en "Harder dan ik hebben kan".'),
+ (4, 'Ravel'): Q('Muziek', 1,
+      'Welke Britse band rond Mick Jagger en Keith Richards scoorde in 1965 een wereldhit met "(I Can\'t Get No) Satisfaction" en staat sinds 1962 nog altijd op het podium?',
+      'Rolling Stones', ['the rolling stones', 'stones', 'the stones'],
+      b=[HIT, WP], z='50 jaar Hitparade: register achterin op Satisfaction',
+      x='The Rolling Stones; hun tong-logo is ontworpen door John Pasche.'),
+}
+for (i, a), new in MUZ.items():
+    j = next(j for j, q in enumerate(AFL[i]['qs']) if q['a'] == a)
+    AFL[i]['qs'][j] = new
+
 # Vraag 12 is altijd de muziekvraag (zoals in de uitzending).
 for A in AFL:
     m = [q for q in A['qs'] if q['c'] == 'Muziek']
